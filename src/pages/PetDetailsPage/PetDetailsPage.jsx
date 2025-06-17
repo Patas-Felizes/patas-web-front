@@ -116,6 +116,7 @@ const PetDetailsPage = () => {
           </div>
 
           <div className="pet-actions">
+            <button className="action-button back-button">Voltar</button>
             <button className="action-button remove-button">Remover</button>
             <button className="action-button edit-button">Editar</button>
           </div>

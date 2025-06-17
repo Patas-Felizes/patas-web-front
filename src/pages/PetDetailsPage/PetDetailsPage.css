@@ -90,7 +90,7 @@
   padding: 0.8rem 1rem;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background-color: #EBEFF9;
+  background-color: #ffffff;
   font-size: 1rem;
   color: #333;
   box-sizing: border-box;
@@ -118,7 +118,7 @@
   padding: 0.8rem 1rem;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background-color: #EBEFF9;
+  background-color: #ffffff;
   font-size: 1rem;
   text-align: left;
   color: #333;
@@ -140,6 +140,15 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s;
+}
+
+.back-button {
+  background-color: #EBEFF9;
+  color: black;
+}
+
+.back-button:hover {
+  background-color: #EBEFF9;
 }
 
 .remove-button {

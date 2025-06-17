@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import Navbar from '../../components/Navbar/Navbar';
 import PetCard from '../../components/PetCard/PetCard';
 import { FaSearch, FaFilter } from 'react-icons/fa';
@@ -8,6 +9,7 @@ const HomePage = () => {
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate(); 
 
   const urlAPIMock = "http://localhost:3000/pets";
 
@@ -28,6 +30,10 @@ const HomePage = () => {
     setLoading(false);
   }
 
+  const handleRegisterClick = () => {
+    navigate('/register-pet');
+  };
+
   const petsFiltrados = pets.filter(pet => 
     pet.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -37,7 +43,12 @@ const HomePage = () => {
       <Navbar />
       <main className="main-content">
         <div className="action-bar">
-          <button className="register-pet-btn">Cadastrar Pet</button>
+          <button 
+            className="register-pet-btn"
+            onClick={handleRegisterClick}
+          >
+            Cadastrar Pet
+          </button>
           
           <div className="search-container">
             <FaSearch className="search-icon" />
