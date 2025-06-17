@@ -1,138 +1,138 @@
 .homepage {
-    background-color: #f8f9fa;
-    min-height: 100vh;
-  }
-  
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  padding-top: calc(2rem + 80px);
+}
+
+.action-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.register-pet-btn {
+  background-color: #84A1DB;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+  white-space: nowrap;
+}
+
+.register-pet-btn:hover {
+  background-color: #667eaf;
+}
+
+.search-container {
+  flex-grow: 1;
+  position: relative;
+  min-width: 200px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  z-index: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.8rem 1rem 0.8rem 40px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+}
+
+.filter-btn {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.3s;
+}
+
+.filter-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.main-content h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.pets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin: 50px 0;
+}
+
+.no-pets {
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+  margin: 50px 0;
+}
+
+@media (max-width: 768px) {
   .main-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    padding-top: calc(2rem + 80px);
+    padding: 1rem;
+    padding-top: calc(1rem + 80px);
   }
-  
+
   .action-bar {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
   }
-  
-  .register-pet-btn {
-    background-color: #84A1DB;
-    color: white;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s;
-    white-space: nowrap;
-  }
-  
-  .register-pet-btn:hover {
-    background-color: #667eaf;
-  }
-  
+
   .search-container {
-    flex-grow: 1;
-    position: relative;
-    min-width: 200px;
+    order: -1;
   }
-  
-  .search-icon {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #aaa;
-    z-index: 1;
-  }
-  
-  .search-input {
-    width: 100%;
-    padding: 0.8rem 1rem 0.8rem 40px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-size: 1rem;
-    box-sizing: border-box;
-  }
-  
-  .search-input:focus {
-    outline: none;
-    border-color: #646cff;
-    box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
-  }
-  
-  .filter-btn {
-    background: white;
-    border: 1px solid #ddd;
-    padding: 0.8rem;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    transition: all 0.3s;
-  }
-  
-  .filter-btn:hover {
-    background-color: #f5f5f5;
-  }
-  
-  .main-content h2 {
-    font-size: 1.8rem;
-    color: #333;
-    margin-bottom: 1.5rem;
-    font-weight: 700;
-    text-align: left;
-  }
-  
+
   .pets-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1.5rem;
-    padding-bottom: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
   }
-  
-  .loading {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #666;
-    margin: 50px 0;
+}
+
+@media (max-width: 480px) {
+  .pets-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .no-pets {
-    text-align: center;
-    color: #666;
-    font-size: 1.1rem;
-    margin: 50px 0;
-  }
-  
-  @media (max-width: 768px) {
-    .main-content {
-      padding: 1rem;
-      padding-top: calc(1rem + 80px);
-    }
-    
-    .action-bar {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    
-    .search-container {
-      order: -1;
-    }
-    
-    .pets-grid {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1rem;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .pets-grid {
-      grid-template-columns: 1fr;
-    }
-  }
+}
