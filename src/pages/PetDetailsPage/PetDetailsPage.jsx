@@ -16,7 +16,11 @@ const PetDetailsPage = () => {
       try {
         const response = await fetch(urlAPIMock);
         const petsData = await response.json();
-        const foundPet = petsData.find(p => p.id === parseInt(petId));
+        
+        const foundPet = petsData.find(p => 
+          String(p.id) === String(petId) || p.id === parseInt(petId)
+        );
+
         setPet(foundPet);
       } catch (error) {
         console.error("Erro ao buscar detalhes do pet:", error);
