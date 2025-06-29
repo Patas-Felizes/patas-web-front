@@ -1,10 +1,18 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+// src/pages/PetRegisterPage/PetRegisterPage.jsx
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
+import { usePets, usePet } from '../../hooks/usePets'; // Importamos os dois hooks
 import './PetRegisterPage.css';
 
 const PetRegisterPage = () => {
   const navigate = useNavigate();
+  const { petId } = useParams(); // Pega o ID da URL, se existir
+  const isEditMode = Boolean(petId);
+
+  const { createPet, editPet, loading: actionLoading } = usePets();
+  const { pet: existingPet, loading: fetchLoading } = usePet(petId); // Hook para buscar o pet em modo de edição
+  
   const fileInputRef = useRef(null);
   
   const [petData, setPetData] = useState({
@@ -16,17 +24,32 @@ const PetRegisterPage = () => {
     castracao: 'false',
     status: 'Para adoção',
     descricao: '',
-    foto: ''
+    foto: '' // Armazenará a URL da foto
   });
-
+  const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+
+  // Se estiver em modo de edição, preenche o formulário quando os dados do pet chegarem
+  useEffect(() => {
+    if (isEditMode && existingPet) {
+      setPetData({
+        nome: existingPet.nome || '',
+        especie: existingPet.especie || '',
+        idadeValor: existingPet.idade?.valor?.toString() || '',
+        idadeUnidade: existingPet.idade?.unidade || 'anos',
+        sexo: existingPet.sexo || 'macho',
+        castracao: existingPet.castracao?.toString() || 'false',
+        status: existingPet.status || 'Para adoção',
+        descricao: existingPet.descricao || '',
+        foto: existingPet.foto || ''
+      });
+      setImagePreview(existingPet.foto);
+    }
+  }, [isEditMode, existingPet]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setPetData(prevData => ({
-      ...prevData,
-      [name]: value
-    }));
+    setPetData(prevData => ({ ...prevData, [name]: value }));
   };
 
   const handleImageClick = () => {
@@ -40,45 +63,45 @@ const PetRegisterPage = () => {
         alert('Por favor, selecione apenas arquivos de imagem.');
         return;
       }
-
       if (file.size > 5 * 1024 * 1024) {
         alert('A imagem deve ter no máximo 5MB.');
         return;
       }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target.result);
-        setPetData(prevData => ({
-          ...prevData,
-          foto: e.target.result
-        }));
-      };
-      reader.readAsDataURL(file);
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
-  const handleRemoveImage = () => {
-    setImagePreview(null);
-    setPetData(prevData => ({
-      ...prevData,
-      foto: ''
-    }));
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    console.log('Salvando novo pet:', petData);
-    alert('Pet cadastrado com sucesso!');
-    navigate('/');
+    try {
+      if (isEditMode) {
+        await editPet(petId, petData, imageFile); // Chama a função de edição do hook
+        alert('Pet atualizado com sucesso!');
+      } else {
+        await createPet(petData, imageFile); // Chama a função de criação do hook
+        alert('Pet cadastrado com sucesso!');
+      }
+      navigate('/');
+    } catch (error) {
+      alert(`Erro: ${error.message}`);
+    }
   };
 
   const handleCancel = () => {
     navigate('/');
   };
+
+  const isLoading = actionLoading || fetchLoading;
+
+  if (fetchLoading) {
+    return (
+        <div className="register-pet-page">
+            <Navbar />
+            <div className="loading-message">Carregando dados do pet...</div>
+        </div>
+    );
+  }
 
   return (
     <div className="register-pet-page">
@@ -87,141 +110,72 @@ const PetRegisterPage = () => {
         <div className="register-pet-left">
           <div className="pet-image-card-placeholder" onClick={handleImageClick}>
             {imagePreview ? (
-              <div className="image-preview-container">
-                <img 
-                  src={imagePreview} 
-                  alt="Preview do pet" 
-                  className="image-preview"
-                />
-              </div>
+              <img src={imagePreview} alt="Preview do pet" className="image-preview" />
             ) : (
               <div className="add-image-content">
                 <span className="add-image-text">Adicionar Foto</span>
-                <span className="add-image-hint">Clique para selecionar</span>
               </div>
             )}
           </div>
-          
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            accept="image/*"
-            style={{ display: 'none' }}
-          />
+          <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" style={{ display: 'none' }} />
         </div>
 
         <div className="register-pet-right">
+          <h2>{isEditMode ? 'Editar Pet' : 'Cadastrar Novo Pet'}</h2>
           <div className="info-section">
-            <div className="info-field full-width">
+             {/* ... Campos do formulário ... */}
+             <div className="info-field full-width">
               <label className="info-label">Nome</label>
-              <input 
-                type="text"
-                name="nome"
-                value={petData.nome}
-                onChange={handleChange}
-                className="info-input"
-                placeholder="Ex: Paçoca"
-                required
-              />
+              <input type="text" name="nome" value={petData.nome} onChange={handleChange} className="info-input" required />
             </div>
-
             <div className="info-field">
               <label className="info-label">Espécie</label>
-              <input
-                type="text"
-                name="especie"
-                value={petData.especie}
-                onChange={handleChange}
-                className="info-input"
-                placeholder="Ex: Cachorro"
-                required
-              />
+              <input type="text" name="especie" value={petData.especie} onChange={handleChange} className="info-input" required />
             </div>
-
-            <div className="info-field">
+             <div className="info-field">
               <label className="info-label">Idade</label>
               <div className="idade-input-group">
-                <input
-                  type="number"
-                  name="idadeValor"
-                  value={petData.idadeValor}
-                  onChange={handleChange}
-                  className="info-input-idade"
-                  placeholder="Ex: 2"
-                  required
-                />
-                <select 
-                  name="idadeUnidade"
-                  value={petData.idadeUnidade}
-                  onChange={handleChange}
-                  className="info-select-idade"
-                >
-                  <option value="Anos">Anos</option>
-                  <option value="Meses">Meses</option>
-                  <option value="Dias">Dias</option>
+                <input type="number" name="idadeValor" value={petData.idadeValor} onChange={handleChange} className="info-input-idade" required />
+                <select name="idadeUnidade" value={petData.idadeUnidade} onChange={handleChange} className="info-select-idade">
+                  <option value="anos">Anos</option>
+                  <option value="meses">Meses</option>
+                  <option value="dias">Dias</option>
                 </select>
               </div>
             </div>
-
             <div className="info-field">
-              <label className="info-label">Sexo</label>
-              <select 
-                name="sexo"
-                value={petData.sexo}
-                onChange={handleChange}
-                className="info-input"
-              >
-                <option value="macho">Macho</option>
-                <option value="fêmea">Fêmea</option>
-              </select>
+                <label className="info-label">Sexo</label>
+                <select name="sexo" value={petData.sexo} onChange={handleChange} className="info-input">
+                    <option value="macho">Macho</option>
+                    <option value="fêmea">Fêmea</option>
+                </select>
             </div>
-
             <div className="info-field">
-              <label className="info-label">Castração</label>
-              <select 
-                name="castracao"
-                value={petData.castracao}
-                onChange={handleChange}
-                className="info-input"
-              >
-                <option value="true">Sim</option>
-                <option value="false">Não</option>
-              </select>
+                <label className="info-label">Castração</label>
+                <select name="castracao" value={petData.castracao} onChange={handleChange} className="info-input">
+                    <option value="true">Sim</option>
+                    <option value="false">Não</option>
+                </select>
             </div>
-
             <div className="info-field">
               <label className="info-label">Status</label>
-              <select
-                name="status"
-                value={petData.status}
-                onChange={handleChange}
-                className="info-input"
-              >
+              <select name="status" value={petData.status} onChange={handleChange} className="info-input">
                 <option>Para adoção</option>
                 <option>Adotado</option>
                 <option>Em tratamento</option>
               </select>
             </div>
           </div>
-
           <div className="pet-description">
             <label className="description-label">Sobre</label>
-            <textarea
-              name="descricao"
-              value={petData.descricao}
-              onChange={handleChange}
-              className="description-textarea"
-              placeholder="Descreva o pet..."
-            />
+            <textarea name="descricao" value={petData.descricao} onChange={handleChange} className="description-textarea" />
           </div>
-
           <div className="pet-actions">
-            <button type="button" className="action-button cancel-button" onClick={handleCancel}>
+            <button type="button" className="action-button cancel-button" onClick={handleCancel} disabled={isLoading}>
               Cancelar
             </button>
-            <button type="submit" className="action-button save-button">
-              Salvar
+            <button type="submit" className="action-button save-button" disabled={isLoading}>
+              {isLoading ? 'Salvando...' : 'Salvar'}
             </button>
           </div>
         </div>
