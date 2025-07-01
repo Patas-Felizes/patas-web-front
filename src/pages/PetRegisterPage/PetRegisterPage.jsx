@@ -160,7 +160,6 @@ const PetRegisterPage = () => {
               <label className="info-label">Status</label>
               <select name="status" value={petData.status} onChange={handleChange} className="info-input">
                 <option>Para adoção</option>
-                <option>Adotado</option>
                 <option>Em tratamento</option>
               </select>
             </div>
