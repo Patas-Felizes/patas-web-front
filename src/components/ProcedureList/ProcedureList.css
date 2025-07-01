@@ -125,7 +125,7 @@
 }
 
 .modal-header {
-  color: white;
+  color: black;
   padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -141,7 +141,7 @@
 .close-modal-btn {
   background: none;
   border: none;
-  color: white;
+  color: black;
   font-size: 1.8rem;
   cursor: pointer;
   padding: 0.5rem;

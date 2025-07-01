@@ -8,11 +8,10 @@ import './PetDetailsPage.css';
 const PetDetailsPage = () => {
   const { petId } = useParams();
   const navigate = useNavigate();
-
   const { pet, loading, error } = usePet(petId);
   
   const { removePet, loading: actionLoading } = usePets();
-
+  
   const handleRemove = async () => {
     if (window.confirm(`Tem certeza que deseja remover o pet ${pet.nome}?`)) {
       try {
@@ -59,11 +58,12 @@ const PetDetailsPage = () => {
           <div className="pet-image-card">
             <img src={pet.foto} alt={pet.nome} className="pet-detail-image" />
           </div>
-          <button className="adopt-button">
-            Solicitar adoção
+          <button onClick={handleBack} className="action-button back-button">Voltar</button>
+          <button onClick={handleRemove} disabled={actionLoading} className="action-button remove-button">
+            {actionLoading ? 'Removendo...' : 'Remover'}
           </button>
+          <button onClick={handleEdit} className="action-button edit-button">Editar</button>
         </div>
-
         <div className="pet-detail-right">
           <div className="info-section">
             <div className="info-field full-width">
@@ -100,14 +100,6 @@ const PetDetailsPage = () => {
             </div>
           </div>
           <ProcedureList petId={petId} /> 
-
-          <div className="pet-actions">
-            <button onClick={handleBack} className="action-button back-button">Voltar</button>
-            <button onClick={handleRemove} disabled={actionLoading} className="action-button remove-button">
-              {actionLoading ? 'Removendo...' : 'Remover'}
-            </button>
-            <button onClick={handleEdit} className="action-button edit-button">Editar</button>
-          </div>
         </div>
       </div>
     </div>

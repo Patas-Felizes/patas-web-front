@@ -8,7 +8,6 @@ const PetRegisterPage = () => {
   const navigate = useNavigate();
   const { petId } = useParams(); 
   const isEditMode = Boolean(petId);
-
   const { createPet, editPet, loading: actionLoading } = usePets();
   const { pet: existingPet, loading: fetchLoading } = usePet(petId); 
   
@@ -27,7 +26,6 @@ const PetRegisterPage = () => {
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-
   
   useEffect(() => {
     if (isEditMode && existingPet) {
@@ -117,11 +115,16 @@ const PetRegisterPage = () => {
             )}
           </div>
           <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" style={{ display: 'none' }} />
+          <button type="button" className="action-button cancel-button" onClick={handleCancel} disabled={isLoading}>
+            Cancelar
+          </button>
+          <button type="submit" className="action-button save-button" disabled={isLoading}>
+            {isLoading ? 'Salvando...' : 'Salvar'}
+          </button>
         </div>
-
         <div className="register-pet-right">
-          <h2>{isEditMode ? 'Editar Pet' : 'Cadastrar Novo Pet'}</h2>
-          <div className="info-section">
+          <h2 style={{ textAlign: 'left' }}>{isEditMode ? 'Editar Pet' : 'Cadastrar Novo Pet'}</h2>
+             <div className="info-section">
              <div className="info-field full-width">
               <label className="info-label">Nome</label>
               <input type="text" name="nome" value={petData.nome} onChange={handleChange} className="info-input" required />
@@ -165,14 +168,6 @@ const PetRegisterPage = () => {
           <div className="pet-description">
             <label className="description-label">Sobre</label>
             <textarea name="descricao" value={petData.descricao} onChange={handleChange} className="description-textarea" />
-          </div>
-          <div className="pet-actions">
-            <button type="button" className="action-button cancel-button" onClick={handleCancel} disabled={isLoading}>
-              Cancelar
-            </button>
-            <button type="submit" className="action-button save-button" disabled={isLoading}>
-              {isLoading ? 'Salvando...' : 'Salvar'}
-            </button>
           </div>
         </div>
       </form>
