@@ -1,18 +1,15 @@
-// src/pages/PetDetailsPage/PetDetailsPage.jsx
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
-import { usePet, usePets } from '../../hooks/usePets'; // Importamos os hooks
+import { usePet, usePets } from '../../hooks/usePets'; 
 import './PetDetailsPage.css';
 
 const PetDetailsPage = () => {
   const { petId } = useParams();
   const navigate = useNavigate();
 
-  // Hook para buscar os dados de um pet específico
   const { pet, loading, error } = usePet(petId);
   
-  // Hook para acessar as ações (como remover)
   const { removePet, loading: actionLoading } = usePets();
 
   const handleRemove = async () => {
@@ -32,7 +29,7 @@ const PetDetailsPage = () => {
   };
 
   const handleBack = () => {
-    navigate(-1); // Volta para a página anterior
+    navigate(-1); 
   };
 
   if (loading) {

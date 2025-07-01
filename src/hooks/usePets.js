@@ -1,4 +1,3 @@
-// src/hooks/usePets.js
 import { useState, useEffect } from 'react';
 import {
   getAllPets,
@@ -16,7 +15,6 @@ export const usePets = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Carregar todos os pets
   const loadPets = async () => {
     setLoading(true);
     setError(null);
@@ -31,7 +29,6 @@ export const usePets = () => {
     }
   };
 
-  // Buscar pets com filtros
   const searchPetsWithFilters = async (filters) => {
     setLoading(true);
     setError(null);
@@ -46,21 +43,17 @@ export const usePets = () => {
     }
   };
 
-  // Adicionar novo pet
   const createPet = async (petData, imageFile = null) => {
     setLoading(true);
     setError(null);
     try {
       let imageUrl = '';
       
-      // Se há arquivo de imagem, fazer upload primeiro
       if (imageFile) {
-        // Criar um ID temporário para o upload
         const tempId = `temp_${Date.now()}`;
         imageUrl = await uploadPetImage(imageFile, tempId);
       }
 
-      // Preparar dados do pet
       const petToSave = {
         nome: petData.nome,
         especie: petData.especie,
@@ -77,7 +70,6 @@ export const usePets = () => {
 
       const newPet = await addPet(petToSave);
       
-      // Atualizar lista local
       setPets(prevPets => [newPet, ...prevPets]);
       
       return newPet;
@@ -90,19 +82,16 @@ export const usePets = () => {
     }
   };
 
-  // Atualizar pet existente
   const editPet = async (petId, petData, imageFile = null) => {
     setLoading(true);
     setError(null);
     try {
       let imageUrl = petData.foto || '';
       
-      // Se há novo arquivo de imagem, fazer upload
       if (imageFile) {
         imageUrl = await uploadPetImage(imageFile, petId);
       }
 
-      // Preparar dados atualizados
       const updatedData = {
         nome: petData.nome,
         especie: petData.especie,
@@ -119,7 +108,6 @@ export const usePets = () => {
 
       const updatedPet = await updatePet(petId, updatedData);
       
-      // Atualizar lista local
       setPets(prevPets =>
         prevPets.map(pet => (pet.id === petId ? { ...pet, ...updatedPet } : pet))
       );
@@ -134,23 +122,18 @@ export const usePets = () => {
     }
   };
 
-  // Remover pet
   const removePet = async (petId) => {
     setLoading(true);
     setError(null);
     try {
-      // Buscar dados do pet para deletar imagem
       const pet = pets.find(p => p.id === petId);
       
-      // Deletar pet do Firestore
       await deletePet(petId);
       
-      // Deletar imagem se existir
       if (pet && pet.foto) {
         await deletePetImage(pet.foto);
       }
       
-      // Atualizar lista local
       setPets(prevPets => prevPets.filter(pet => pet.id !== petId));
       
       return petId;
@@ -163,7 +146,6 @@ export const usePets = () => {
     }
   };
 
-  // Carregar pets na inicialização
   useEffect(() => {
     loadPets();
   }, []);
@@ -181,7 +163,6 @@ export const usePets = () => {
   };
 };
 
-// Hook para um pet específico
 export const usePet = (petId) => {
   const [pet, setPet] = useState(null);
   const [loading, setLoading] = useState(false);

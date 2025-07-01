@@ -1,17 +1,16 @@
-// src/pages/PetRegisterPage/PetRegisterPage.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
-import { usePets, usePet } from '../../hooks/usePets'; // Importamos os dois hooks
+import { usePets, usePet } from '../../hooks/usePets'; 
 import './PetRegisterPage.css';
 
 const PetRegisterPage = () => {
   const navigate = useNavigate();
-  const { petId } = useParams(); // Pega o ID da URL, se existir
+  const { petId } = useParams(); 
   const isEditMode = Boolean(petId);
 
   const { createPet, editPet, loading: actionLoading } = usePets();
-  const { pet: existingPet, loading: fetchLoading } = usePet(petId); // Hook para buscar o pet em modo de edição
+  const { pet: existingPet, loading: fetchLoading } = usePet(petId); 
   
   const fileInputRef = useRef(null);
   
@@ -24,12 +23,12 @@ const PetRegisterPage = () => {
     castracao: 'false',
     status: 'Para adoção',
     descricao: '',
-    foto: '' // Armazenará a URL da foto
+    foto: '' 
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
-  // Se estiver em modo de edição, preenche o formulário quando os dados do pet chegarem
+  
   useEffect(() => {
     if (isEditMode && existingPet) {
       setPetData({
@@ -76,10 +75,10 @@ const PetRegisterPage = () => {
     e.preventDefault();
     try {
       if (isEditMode) {
-        await editPet(petId, petData, imageFile); // Chama a função de edição do hook
+        await editPet(petId, petData, imageFile); 
         alert('Pet atualizado com sucesso!');
       } else {
-        await createPet(petData, imageFile); // Chama a função de criação do hook
+        await createPet(petData, imageFile); 
         alert('Pet cadastrado com sucesso!');
       }
       navigate('/');
@@ -123,14 +122,18 @@ const PetRegisterPage = () => {
         <div className="register-pet-right">
           <h2>{isEditMode ? 'Editar Pet' : 'Cadastrar Novo Pet'}</h2>
           <div className="info-section">
-             {/* ... Campos do formulário ... */}
              <div className="info-field full-width">
               <label className="info-label">Nome</label>
               <input type="text" name="nome" value={petData.nome} onChange={handleChange} className="info-input" required />
             </div>
             <div className="info-field">
               <label className="info-label">Espécie</label>
-              <input type="text" name="especie" value={petData.especie} onChange={handleChange} className="info-input" required />
+              <select name="especie" value={petData.especie} onChange={handleChange} className="info-input" required>
+                <option value="">Selecione a espécie</option> 
+                <option value="Cachorro">Cachorro</option>
+                <option value="Gato">Gato</option>
+                <option value="Outros">Outros</option>
+              </select>
             </div>
              <div className="info-field">
               <label className="info-label">Idade</label>
@@ -148,13 +151,6 @@ const PetRegisterPage = () => {
                 <select name="sexo" value={petData.sexo} onChange={handleChange} className="info-input">
                     <option value="macho">Macho</option>
                     <option value="fêmea">Fêmea</option>
-                </select>
-            </div>
-            <div className="info-field">
-                <label className="info-label">Castração</label>
-                <select name="castracao" value={petData.castracao} onChange={handleChange} className="info-input">
-                    <option value="true">Sim</option>
-                    <option value="false">Não</option>
                 </select>
             </div>
             <div className="info-field">

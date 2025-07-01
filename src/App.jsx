@@ -1,4 +1,3 @@
-// src/App.jsx
 import { Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage/HomePage'
 import PetDetailsPage from './pages/PetDetailsPage/PetDetailsPage'
@@ -12,7 +11,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/pets/:petId" element={<PetDetailsPage />} />
         <Route path="/register-pet" element={<PetRegisterPage />} /> 
-        <Route path="/edit-pet/:petId" element={<PetRegisterPage />} /> {/* ROTA ADICIONADA */}
+        <Route path="/edit-pet/:petId" element={<PetRegisterPage />} /> 
       </Routes>
     </>
   )

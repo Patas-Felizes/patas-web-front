@@ -1,4 +1,3 @@
-// src/services/firebase.js
 import { 
   collection, 
   addDoc, 
@@ -20,12 +19,8 @@ import {
 } from 'firebase/storage';
 import { db, storage } from '../config/firebase';
 
-// Coleção de pets no Firestore
 const PETS_COLLECTION = 'pets';
 
-// ==================== FUNÇÕES PARA PETS ====================
-
-// Buscar todos os pets
 export const getAllPets = async () => {
   try {
     const petsRef = collection(db, PETS_COLLECTION);
@@ -47,7 +42,6 @@ export const getAllPets = async () => {
   }
 };
 
-// Buscar pet por ID
 export const getPetById = async (petId) => {
   try {
     const petRef = doc(db, PETS_COLLECTION, petId);
@@ -67,7 +61,6 @@ export const getPetById = async (petId) => {
   }
 };
 
-// Adicionar novo pet
 export const addPet = async (petData) => {
   try {
     const petWithTimestamp = {
@@ -88,7 +81,6 @@ export const addPet = async (petData) => {
   }
 };
 
-// Atualizar pet
 export const updatePet = async (petId, petData) => {
   try {
     const petRef = doc(db, PETS_COLLECTION, petId);
@@ -109,7 +101,6 @@ export const updatePet = async (petId, petData) => {
   }
 };
 
-// Deletar pet
 export const deletePet = async (petId) => {
   try {
     const petRef = doc(db, PETS_COLLECTION, petId);
@@ -122,12 +113,10 @@ export const deletePet = async (petId) => {
   }
 };
 
-// Buscar pets por filtros
 export const searchPets = async (filters = {}) => {
   try {
     let q = collection(db, PETS_COLLECTION);
     
-    // Aplicar filtros
     if (filters.especie) {
       q = query(q, where('especie', '==', filters.especie));
     }
@@ -140,7 +129,6 @@ export const searchPets = async (filters = {}) => {
       q = query(q, where('status', '==', filters.status));
     }
     
-    // Ordenar por data de criação
     q = query(q, orderBy('createdAt', 'desc'));
     
     const querySnapshot = await getDocs(q);
@@ -160,20 +148,14 @@ export const searchPets = async (filters = {}) => {
   }
 };
 
-// ==================== FUNÇÕES PARA UPLOAD DE IMAGENS ====================
-
-// Upload de imagem para Firebase Storage
 export const uploadPetImage = async (file, petId) => {
   try {
-    // Gerar nome único para o arquivo
     const timestamp = Date.now();
     const fileName = `${petId}_${timestamp}_${file.name}`;
     const storageRef = ref(storage, `pets/${fileName}`);
     
-    // Upload do arquivo
     const snapshot = await uploadBytes(storageRef, file);
     
-    // Obter URL de download
     const downloadURL = await getDownloadURL(snapshot.ref);
     
     return downloadURL;
@@ -183,25 +165,20 @@ export const uploadPetImage = async (file, petId) => {
   }
 };
 
-// Deletar imagem do Firebase Storage
 export const deletePetImage = async (imageUrl) => {
   try {
     if (!imageUrl) return;
     
-    // Extrair o path da imagem da URL
     const imageRef = ref(storage, imageUrl);
     await deleteObject(imageRef);
   } catch (error) {
     console.error('Erro ao deletar imagem:', error);
-    // Não lançar erro aqui pois a imagem pode já ter sido deletada
   }
 };
 
-// ==================== FUNÇÕES PARA SOLICITAÇÕES DE ADOÇÃO ====================
 
 const ADOPTION_REQUESTS_COLLECTION = 'adoptionRequests';
 
-// Criar solicitação de adoção
 export const createAdoptionRequest = async (adoptionData) => {
   try {
     const requestWithTimestamp = {
@@ -223,7 +200,6 @@ export const createAdoptionRequest = async (adoptionData) => {
   }
 };
 
-// Buscar solicitações de adoção
 export const getAdoptionRequests = async () => {
   try {
     const requestsRef = collection(db, ADOPTION_REQUESTS_COLLECTION);
@@ -245,7 +221,6 @@ export const getAdoptionRequests = async () => {
   }
 };
 
-// Atualizar status da solicitação de adoção
 export const updateAdoptionRequestStatus = async (requestId, status) => {
   try {
     const requestRef = doc(db, ADOPTION_REQUESTS_COLLECTION, requestId);

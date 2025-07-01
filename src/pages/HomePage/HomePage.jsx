@@ -157,12 +157,6 @@ const HomePage = () => {
         {!loading && petsFiltrados.length === 0 && pets.length === 0 && (
           <div className="no-pets">
             <p>Nenhum pet cadastrado ainda.</p>
-            <button 
-              onClick={handleRegisterClick}
-              className="register-pet-btn"
-            >
-              Cadastrar primeiro pet
-            </button>
           </div>
         )}
 
