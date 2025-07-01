@@ -69,32 +69,34 @@
   display: flex;
   align-items: center;
   flex-grow: 1;
-  flex-wrap: wrap;
   gap: 1rem;
+  justify-content: space-between;
 }
 
 .procedure-description {
   color: #333;
   font-size: 0.95rem;
-  flex-basis: auto;
   text-align: left;
-  min-width: 150px;
-  flex-grow: 1;
+  flex: 1;
+  min-width: 0;
 }
 
 .procedure-category-display {
   font-weight: 600;
   color: #555;
   white-space: nowrap;
-  text-align: left;
-  flex-basis: auto;
+  text-align: center;
+  flex: 0 0 auto;
+  min-width: 100px;
 }
 
 .procedure-date {
   font-weight: 600;
   color: #555;
   white-space: nowrap;
-  text-align: left;
+  text-align: right;
+  flex: 0 0 auto;
+  min-width: 100px;
 }
 
 .modal-overlay {

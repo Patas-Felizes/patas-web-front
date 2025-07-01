@@ -98,17 +98,15 @@ const ProcedureList = ({ petId }) => {
             <div key={procedure.id} className="procedure-item">
               <div className="procedure-header">
                 <div className="procedure-summary">
-                  <div className="procedure-top-row">
-                    <span className="procedure-category-display">
-                      {procedure.categoria}
-                    </span>
-                    <span className="procedure-date">
-                      {formatDate(procedure.data_realizacao)}
-                    </span>
-                  </div>
                   <div className="procedure-description">
                     {procedure.descricao}
                   </div>
+                  <span className="procedure-category-display">
+                    {procedure.categoria}
+                  </span>
+                  <span className="procedure-date">
+                    {formatDate(procedure.data_realizacao)}
+                  </span>
                 </div>
               </div>
             </div>
