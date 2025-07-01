@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
+import ProcedureList from '../../components/ProcedureList/ProcedureList'; 
 import { usePet, usePets } from '../../hooks/usePets'; 
 import './PetDetailsPage.css';
 
@@ -98,6 +99,8 @@ const PetDetailsPage = () => {
               {pet.descricao || 'Nenhuma descrição disponível.'}
             </div>
           </div>
+          <ProcedureList petId={petId} /> 
+
           <div className="pet-actions">
             <button onClick={handleBack} className="action-button back-button">Voltar</button>
             <button onClick={handleRemove} disabled={actionLoading} className="action-button remove-button">
