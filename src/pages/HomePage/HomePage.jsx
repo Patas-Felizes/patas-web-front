@@ -1,4 +1,3 @@
-// src/pages/HomePage/HomePage.jsx
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import Navbar from '../../components/Navbar/Navbar';
@@ -22,13 +21,10 @@ const HomePage = () => {
     navigate('/register-pet');
   };
 
-  // Filtrar pets localmente
   const petsFiltrados = useMemo(() => {
     return pets.filter(pet => {
-      // Filtro por nome
       const matchesName = pet.nome.toLowerCase().includes(searchTerm.toLowerCase());
       
-      // Filtros adicionais
       const matchesEspecie = !filters.especie || pet.especie === filters.especie;
       const matchesSexo = !filters.sexo || pet.sexo === filters.sexo;
       const matchesStatus = !filters.status || pet.status === filters.status;
@@ -100,7 +96,6 @@ const HomePage = () => {
           </button>
         </div>
 
-        {/* Painel de Filtros */}
         {showFilters && (
           <div className="filters-panel">
             <div className="filter-group">
@@ -112,8 +107,7 @@ const HomePage = () => {
                 <option value="">Todas</option>
                 <option value="Cachorro">Cachorro</option>
                 <option value="Gato">Gato</option>
-                <option value="Coelho">Coelho</option>
-                <option value="Pássaro">Pássaro</option>
+                <option value="Outros">Outros</option>
               </select>
             </div>
 
