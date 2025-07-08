@@ -35,11 +35,38 @@ const RegisterPage = () => {
     };
   }, []);
 
+  const formatPhone = (value) => {
+    const numbers = value.replace(/\D/g, '');
+    
+    const limitedNumbers = numbers.slice(0, 11);
+    
+    if (limitedNumbers.length <= 2) {
+      return limitedNumbers;
+    } else if (limitedNumbers.length <= 7) {
+      return `(${limitedNumbers.slice(0, 2)}) ${limitedNumbers.slice(2)}`;
+    } else if (limitedNumbers.length <= 10) {
+      return `(${limitedNumbers.slice(0, 2)}) ${limitedNumbers.slice(2, 7)}-${limitedNumbers.slice(7)}`;
+    } else {
+      return `(${limitedNumbers.slice(0, 2)}) ${limitedNumbers.slice(2, 3)} ${limitedNumbers.slice(3, 7)}-${limitedNumbers.slice(7, 11)}`;
+    }
+  };
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    
+    if (name === 'telefone') {
+      const formattedValue = formatPhone(value);
+      setFormData({
+        ...formData,
+        [name]: formattedValue
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+    
     if (error) setError('');
   };
 
@@ -86,7 +113,12 @@ const RegisterPage = () => {
     }
 
     try {
-      const { user, userData } = await registerUser(formData);
+      const dataToSend = {
+        ...formData,
+        telefone: formData.telefone.replace(/\D/g, '')
+      };
+      
+      const { user, userData } = await registerUser(dataToSend);
       
       setUser(user);
       setUserData(userData);
@@ -174,7 +206,7 @@ const RegisterPage = () => {
               name="telefone"
               value={formData.telefone}
               onChange={handleChange}
-              placeholder="(85) 99999-9999"
+              placeholder="(85) 9 9999-9999"
             />
           </div>
 
