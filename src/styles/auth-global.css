@@ -1,19 +1,27 @@
-/* src/styles/auth-global.css - Criar este arquivo */
-/* Estilos globais para páginas de autenticação */
-
-/* Aplicar quando estiver nas páginas de auth */
 body.auth-page {
   background-color: #84A1DB !important;
-  margin: 0;
+  margin: 0; 
   padding: 0;
+  width: 100vw;
+  overflow-x: hidden;
 }
 
 html.auth-page {
   background-color: #84A1DB !important;
+  margin: 0; 
+  padding: 0;
+  width: 100vw; 
+  overflow-x: hidden; 
 }
 
-/* Reset para o root também */
 #root.auth-page {
   background-color: #84A1DB !important;
   min-height: 100vh;
+  width: 100vw;
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  padding: 0; 
+  margin: 0; 
+  overflow-x: hidden; 
 }

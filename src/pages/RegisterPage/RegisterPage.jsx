@@ -1,4 +1,3 @@
-// src/pages/RegisterPage/RegisterPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash, FaUser, FaHeart } from 'react-icons/fa';
@@ -22,14 +21,12 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Aplicar classe ao body quando componente montar
   useEffect(() => {
     document.body.classList.add('auth-page');
     document.documentElement.classList.add('auth-page');
     const root = document.getElementById('root');
     if (root) root.classList.add('auth-page');
 
-    // Limpar quando componente desmontar
     return () => {
       document.body.classList.remove('auth-page');
       document.documentElement.classList.remove('auth-page');
@@ -43,7 +40,6 @@ const RegisterPage = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    // Limpar erro quando usuário começar a digitar
     if (error) setError('');
   };
 
@@ -95,11 +91,9 @@ const RegisterPage = () => {
       setUser(user);
       setUserData(userData);
 
-      // Redirecionar baseado no tipo de usuário
       if (userData.tipoUsuario === 'protetor') {
         navigate('/');
       } else if (userData.tipoUsuario === 'adotante') {
-        // Por enquanto redireciona para home também, até ter a página do adotante
         navigate('/');
       }
     } catch (error) {
@@ -124,7 +118,6 @@ const RegisterPage = () => {
             </div>
           )}
 
-          {/* Seleção de tipo de usuário */}
           <div className="user-type-section">
             <label>Tipo de usuário</label>
             <div className="user-type-options">
