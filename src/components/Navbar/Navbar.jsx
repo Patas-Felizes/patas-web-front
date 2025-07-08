@@ -102,7 +102,6 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Overlay para fechar menu quando clicar fora */}
       {showUserMenu && (
         <div 
           className="user-menu-overlay"

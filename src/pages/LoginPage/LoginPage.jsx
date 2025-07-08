@@ -16,14 +16,12 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Aplicar classe ao body quando componente montar
   useEffect(() => {
     document.body.classList.add('auth-page');
     document.documentElement.classList.add('auth-page');
     const root = document.getElementById('root');
     if (root) root.classList.add('auth-page');
 
-    // Limpar quando componente desmontar
     return () => {
       document.body.classList.remove('auth-page');
       document.documentElement.classList.remove('auth-page');
@@ -37,7 +35,6 @@ const LoginPage = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    // Limpar erro quando usuário começar a digitar
     if (error) setError('');
   };
 
@@ -52,11 +49,9 @@ const LoginPage = () => {
       setUser(user);
       setUserData(userData);
 
-      // Redirecionar baseado no tipo de usuário
       if (userData.tipoUsuario === 'protetor') {
         navigate('/');
       } else if (userData.tipoUsuario === 'adotante') {
-        // Por enquanto redireciona para home também, até ter a página do adotante
         navigate('/');
       }
     } catch (error) {
@@ -96,7 +91,7 @@ const LoginPage = () => {
 
           <div className="form-group">
             <label htmlFor="password">Senha</label>
-            <div className="password-input">
+            <div className="password-input"> 
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="password"

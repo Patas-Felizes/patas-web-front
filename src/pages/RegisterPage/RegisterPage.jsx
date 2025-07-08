@@ -108,7 +108,7 @@ const RegisterPage = () => {
       <div className="register-container">
         <div className="register-header">
           <h1>Criar Conta</h1>
-          <p>Junte-se à nossa comunidade de proteção animal</p>
+          <p>Junte-se à nossa plataforma de proteção animal e seja a mudança na vida dos animais.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="register-form">
@@ -119,7 +119,7 @@ const RegisterPage = () => {
           )}
 
           <div className="user-type-section">
-            <label>Tipo de usuário</label>
+            <label>Escolha o seu perfil</label>
             <div className="user-type-options">
               <div 
                 className={`user-type-card ${formData.tipoUsuario === 'protetor' ? 'selected' : ''}`}
