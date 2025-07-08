@@ -124,6 +124,12 @@ body {
   background-color: #f8f9fa;
 }
 
+body.auth-page, html.auth-page, #root.auth-page {
+  background-color: #84A1DB !important;
+  margin: 0;
+  padding: 0;
+}
+
 #root {
   min-height: 100vh;
 }

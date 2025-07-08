@@ -4,10 +4,12 @@ import Navbar from '../../components/Navbar/Navbar';
 import PetCard from '../../components/PetCard/PetCard';
 import { FaSearch, FaFilter } from 'react-icons/fa';
 import { usePets } from '../../hooks/usePets';
+import { useAuth } from '../../contexts/AuthContext';
 import './HomePage.css';
 
 const HomePage = () => {
   const navigate = useNavigate(); 
+  const { userData } = useAuth();
   const { pets, loading, error, clearError } = usePets();
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
@@ -17,12 +19,21 @@ const HomePage = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
 
+  const isProtetor = userData?.tipoUsuario === 'protetor';
+  const isAdotante = userData?.tipoUsuario === 'adotante';
+
   const handleRegisterClick = () => {
     navigate('/register-pet');
   };
 
   const petsFiltrados = useMemo(() => {
-    return pets.filter(pet => {
+    let filteredPets = pets;
+
+    if (isAdotante) {
+      filteredPets = pets.filter(pet => pet.status === 'Para adoção');
+    }
+
+    return filteredPets.filter(pet => {
       const matchesName = pet.nome.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchesEspecie = !filters.especie || pet.especie === filters.especie;
@@ -31,7 +42,7 @@ const HomePage = () => {
       
       return matchesName && matchesEspecie && matchesSexo && matchesStatus;
     });
-  }, [pets, searchTerm, filters]);
+  }, [pets, searchTerm, filters, isAdotante]);
 
   const handleFilterChange = (filterType, value) => {
     setFilters(prev => ({
@@ -68,13 +79,16 @@ const HomePage = () => {
     <div className="homepage">
       <Navbar />
       <main className="main-content">
+
         <div className="action-bar">
-          <button 
-            className="register-pet-btn"
-            onClick={handleRegisterClick}
-          >
-            Cadastrar Pet
-          </button>
+          {isProtetor && (
+            <button 
+              className="register-pet-btn"
+              onClick={handleRegisterClick}
+            >
+              Cadastrar Pet
+            </button>
+          )}
           
           <div className="search-container">
             <FaSearch className="search-icon" />
@@ -123,18 +137,20 @@ const HomePage = () => {
               </select>
             </div>
 
-            <div className="filter-group">
-              <label>Status:</label>
-              <select 
-                value={filters.status} 
-                onChange={(e) => handleFilterChange('status', e.target.value)}
-              >
-                <option value="">Todos</option>
-                <option value="Para adoção">Para adoção</option>
-                <option value="Adotado">Adotado</option>
-                <option value="Em tratamento">Em tratamento</option>
-              </select>
-            </div>
+            {isProtetor && (
+              <div className="filter-group">
+                <label>Status:</label>
+                <select 
+                  value={filters.status} 
+                  onChange={(e) => handleFilterChange('status', e.target.value)}
+                >
+                  <option value="">Todos</option>
+                  <option value="Para adoção">Para adoção</option>
+                  <option value="Adotado">Adotado</option>
+                  <option value="Em tratamento">Em tratamento</option>
+                </select>
+              </div>
+            )}
 
             <button onClick={clearFilters} className="clear-filters-btn">
               Limpar Filtros
@@ -142,21 +158,28 @@ const HomePage = () => {
           </div>
         )}
         
-        <h2>Pets ({petsFiltrados.length})</h2>
+        <h2>
+          {isAdotante ? 'Animais Disponíveis' : 'Pets'} ({petsFiltrados.length})
+        </h2>
         
         {loading ? (
           <div className="loading">Carregando pets...</div>
         ) : (
           <div className="pets-grid">
             {petsFiltrados.map(pet => (
-              <PetCard key={pet.id} pet={pet} />
+              <PetCard key={pet.id} pet={pet} isAdotante={isAdotante} />
             ))}
           </div>
         )}
 
         {!loading && petsFiltrados.length === 0 && pets.length === 0 && (
           <div className="no-pets">
-            <p>Nenhum pet cadastrado ainda.</p>
+            <p>
+              {isAdotante ? 
+                'Nenhum animal disponível para adoção no momento.' : 
+                'Nenhum pet cadastrado ainda.'
+              }
+            </p>
           </div>
         )}
 

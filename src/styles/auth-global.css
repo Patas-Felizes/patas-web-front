@@ -1,0 +1,19 @@
+/* src/styles/auth-global.css - Criar este arquivo */
+/* Estilos globais para páginas de autenticação */
+
+/* Aplicar quando estiver nas páginas de auth */
+body.auth-page {
+  background-color: #84A1DB !important;
+  margin: 0;
+  padding: 0;
+}
+
+html.auth-page {
+  background-color: #84A1DB !important;
+}
+
+/* Reset para o root também */
+#root.auth-page {
+  background-color: #84A1DB !important;
+  min-height: 100vh;
+}
