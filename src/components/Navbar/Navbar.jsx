@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaSignOutAlt, FaChevronDown } from 'react-icons/fa';
+import { FaUser, FaSignOutAlt, FaChevronDown, FaBuilding } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
+import { useOng } from '../../contexts/OngContext';
 import { logoutUser } from '../../services/auth';
 import './Navbar.css';
 import logo from '../../assets/images/logo.png';
@@ -9,6 +10,7 @@ import logo from '../../assets/images/logo.png';
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, userData, setUser, setUserData } = useAuth();
+  const { selectedOng, clearSelectedOng } = useOng();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
@@ -18,6 +20,7 @@ const Navbar = () => {
       await logoutUser();
       setUser(null);
       setUserData(null);
+      clearSelectedOng();
       navigate('/login');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
@@ -25,6 +28,11 @@ const Navbar = () => {
       setLoggingOut(false);
       setShowUserMenu(false);
     }
+  };
+
+  const handleSelectOng = () => {
+    setShowUserMenu(false);
+    navigate('/select-ong');
   };
 
   const getUserTypeLabel = () => {
@@ -53,9 +61,19 @@ const Navbar = () => {
         <img src={logo} alt="Patas Felizes" className="logo-image" />
       </Link>
       
+      {/* Mostrar ONG selecionada para protetores */}
+      {user && userData && isProtetor && selectedOng && (
+        <div className="selected-ong-info">
+          <FaBuilding className="ong-icon" />
+          <span className="ong-name">{selectedOng.nome}</span>
+        </div>
+      )}
+      
       {user && userData && (
         <ul className="navbar-links">
-          <li><Link to="/" className="active">Pets</Link></li>
+          <li><Link to="/" className="active">
+            {isProtetor ? 'Animais' : 'Pets'}
+          </Link></li>
           {isProtetor && (
             <li><a href="#">Solicitações de Adoção</a></li>
           )}
@@ -85,6 +103,38 @@ const Navbar = () => {
                   <p className="user-email">{userData.email}</p>
                   <span className="user-type-badge">{getUserTypeLabel()}</span>
                 </div>
+                
+                {/* Seção de ONG para protetores */}
+                {isProtetor && (
+                  <>
+                    <hr />
+                    <div className="ong-section">
+                      {selectedOng ? (
+                        <div className="current-ong">
+                          <div className="ong-info">
+                            <FaBuilding className="ong-icon-small" />
+                            <span className="ong-name-small">{selectedOng.nome}</span>
+                          </div>
+                          <button 
+                            className="change-ong-button"
+                            onClick={handleSelectOng}
+                          >
+                            Trocar ONG
+                          </button>
+                        </div>
+                      ) : (
+                        <button 
+                          className="select-ong-button"
+                          onClick={handleSelectOng}
+                        >
+                          <FaBuilding />
+                          Selecionar ONG
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+                
                 <hr />
                 <button 
                   className="logout-button"

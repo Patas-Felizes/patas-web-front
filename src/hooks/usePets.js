@@ -9,17 +9,24 @@ import {
   uploadPetImage,
   deletePetImage
 } from '../services/firebase';
+import { useAuth } from '../contexts/AuthContext';
+import { useOng } from '../contexts/OngContext';
 
 export const usePets = () => {
+  const { userData } = useAuth();
+  const { selectedOng } = useOng();
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const isProtetor = userData?.tipoUsuario === 'protetor';
+  const ongId = isProtetor ? selectedOng?.id : null;
 
   const loadPets = async () => {
     setLoading(true);
     setError(null);
     try {
-      const petsData = await getAllPets();
+      const petsData = await getAllPets(ongId);
       setPets(petsData);
     } catch (err) {
       setError(err.message);
@@ -33,7 +40,7 @@ export const usePets = () => {
     setLoading(true);
     setError(null);
     try {
-      const petsData = await searchPets(filters);
+      const petsData = await searchPets(filters, ongId);
       setPets(petsData);
     } catch (err) {
       setError(err.message);
@@ -44,6 +51,10 @@ export const usePets = () => {
   };
 
   const createPet = async (petData, imageFile = null) => {
+    if (isProtetor && !ongId) {
+      throw new Error('Nenhuma ONG selecionada');
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -68,7 +79,7 @@ export const usePets = () => {
         foto: imageUrl
       };
 
-      const newPet = await addPet(petToSave);
+      const newPet = await addPet(petToSave, ongId);
       
       setPets(prevPets => [newPet, ...prevPets]);
       
@@ -147,8 +158,12 @@ export const usePets = () => {
   };
 
   useEffect(() => {
-    loadPets();
-  }, []);
+    // Para protetores, só carrega se tiver ONG selecionada
+    // Para adotantes, carrega sempre
+    if (!isProtetor || (isProtetor && ongId)) {
+      loadPets();
+    }
+  }, [ongId, isProtetor]);
 
   return {
     pets,

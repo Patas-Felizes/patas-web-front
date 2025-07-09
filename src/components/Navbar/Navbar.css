@@ -25,6 +25,31 @@
   width: auto;
 }
 
+/* Informações da ONG selecionada */
+.selected-ong-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-left: 2rem;
+}
+
+.ong-icon {
+  font-size: 0.9rem;
+}
+
+.ong-name {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .navbar-links {
   list-style: none;
   display: flex;
@@ -128,7 +153,7 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-  min-width: 220px;
+  min-width: 250px;
   padding: 1rem 0;
   border: 1px solid #e1e5e9;
   animation: slideDown 0.2s ease-out;
@@ -166,6 +191,61 @@
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
+}
+
+/* Seção de ONG no dropdown */
+.ong-section {
+  padding: 0 1rem;
+}
+
+.current-ong {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ong-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #333;
+  font-size: 0.85rem;
+}
+
+.ong-icon-small {
+  color: #84A1DB;
+  font-size: 0.8rem;
+}
+
+.ong-name-small {
+  font-weight: 600;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.change-ong-button,
+.select-ong-button {
+  background: none;
+  border: 1px solid #84A1DB;
+  color: #84A1DB;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.change-ong-button:hover,
+.select-ong-button:hover {
+  background: #84A1DB;
+  color: white;
 }
 
 .user-dropdown hr {
@@ -215,6 +295,10 @@
     gap: 1rem;
   }
 
+  .selected-ong-info {
+    display: none; /* Oculta na navbar em mobile */
+  }
+
   .navbar-links {
     gap: 1.5rem;
     margin-right: 2rem;
@@ -230,7 +314,7 @@
 
   .user-dropdown {
     right: -1rem;
-    min-width: 200px;
+    min-width: 220px;
   }
 
   .profile-pic-placeholder {
@@ -248,5 +332,10 @@
   
   .navbar-links a {
     font-size: 0.8rem;
+  }
+
+  .user-dropdown {
+    right: -2rem;
+    min-width: 200px;
   }
 }

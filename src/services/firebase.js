@@ -22,10 +22,27 @@ import { db, storage } from '../config/firebase';
 const PETS_COLLECTION = 'pets';
 const PROCEDURES_COLLECTION = 'procedimentos'; 
 
-export const getAllPets = async () => {
+// Modificado para incluir ongId nos pets
+export const getAllPets = async (ongId = null) => {
   try {
     const petsRef = collection(db, PETS_COLLECTION);
-    const q = query(petsRef, orderBy('createdAt', 'desc'));
+    let q;
+    
+    if (ongId) {
+      q = query(
+        petsRef, 
+        where('ongId', '==', ongId),
+        orderBy('createdAt', 'desc')
+      );
+    } else {
+      // Para adotantes, buscar todos os pets disponíveis para adoção
+      q = query(
+        petsRef,
+        where('status', '==', 'Para adoção'),
+        orderBy('createdAt', 'desc')
+      );
+    }
+    
     const querySnapshot = await getDocs(q);
 
     const pets = [];
@@ -62,10 +79,12 @@ export const getPetById = async (petId) => {
   }
 };
 
-export const addPet = async (petData) => {
+// Modificado para incluir ongId
+export const addPet = async (petData, ongId) => {
   try {
     const petWithTimestamp = {
       ...petData,
+      ongId, // Associa o pet à ONG
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
@@ -117,24 +136,35 @@ export const deletePet = async (petId) => {
   }
 };
 
-export const searchPets = async (filters = {}) => {
+// Modificado para incluir ongId nos filtros
+export const searchPets = async (filters = {}, ongId = null) => {
   try {
-    let q = collection(db, PETS_COLLECTION);
+    const petsRef = collection(db, PETS_COLLECTION);
+    let constraints = [];
+
+    if (ongId) {
+      constraints.push(where('ongId', '==', ongId));
+    } else {
+      // Para adotantes, apenas pets disponíveis para adoção
+      constraints.push(where('status', '==', 'Para adoção'));
+    }
 
     if (filters.especie) {
-      q = query(q, where('especie', '==', filters.especie));
+      constraints.push(where('especie', '==', filters.especie));
     }
 
     if (filters.sexo) {
-      q = query(q, where('sexo', '==', filters.sexo));
+      constraints.push(where('sexo', '==', filters.sexo));
     }
 
-    if (filters.status) {
-      q = query(q, where('status', '==', filters.status));
+    if (filters.status && ongId) {
+      // Apenas protetores podem filtrar por status
+      constraints.push(where('status', '==', filters.status));
     }
 
-    q = query(q, orderBy('createdAt', 'desc'));
+    constraints.push(orderBy('createdAt', 'desc'));
 
+    const q = query(petsRef, ...constraints);
     const querySnapshot = await getDocs(q);
     const pets = [];
 
@@ -179,7 +209,6 @@ export const deletePetImage = async (imageUrl) => {
     console.error('Erro ao deletar imagem:', error);
   }
 };
-
 
 export const getProceduresByPetId = async (petId) => {
   try {
