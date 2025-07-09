@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useProcedures } from '../../hooks/useProcedures';
 import './ProcedureList.css';
 
-const ProcedureList = ({ petId }) => {
+const ProcedureList = ({ petId, isAdotante }) => { 
   const { procedures, loading, error, createProcedure, removeProcedure, loadProcedures } = useProcedures(petId);
 
   const [showAddModal, setShowAddModal] = useState(false);
@@ -81,12 +81,14 @@ const ProcedureList = ({ petId }) => {
       <h3 className="procedure-title">Procedimentos médicos</h3>
 
       <div className="procedure-list-container">
-        <div className="procedure-item add-item">
-          <div className="procedure-header add-header" onClick={openAddModal}>
-            <div className="add-icon">+</div>
-            <span>Adicionar novo procedimento</span>
+        {!isAdotante && ( 
+          <div className="procedure-item add-item">
+            <div className="procedure-header add-header" onClick={openAddModal}>
+              <div className="add-icon">+</div>
+              <span>Adicionar novo procedimento</span>
+            </div>
           </div>
-        </div>
+        )}
 
         {procedures.length > 0 ? (
           procedures.map((procedure) => (
@@ -99,12 +101,14 @@ const ProcedureList = ({ petId }) => {
                     {formatDate(procedure.data_realizacao?.toDate ? procedure.data_realizacao.toDate() : procedure.data_realizacao)}
                   </span>
                 </div>
-                <button
-                  onClick={() => handleRemoveProcedure(procedure.id, procedure.descricao)}
-                  className="remove-procedure-btn"
-                >
-                  X
-                </button>
+                {!isAdotante && ( 
+                  <button
+                    onClick={() => handleRemoveProcedure(procedure.id, procedure.descricao)}
+                    className="remove-procedure-btn"
+                    title="Remover procedimento"
+                  >
+                  </button>
+                )}
               </div>
             </div>
           ))

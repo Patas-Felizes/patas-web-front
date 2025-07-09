@@ -128,6 +128,21 @@ body {
   background-color: #f8f9fa;
 }
 
+body.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+html.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+#root.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
 body.auth-page, html.auth-page, #root.auth-page {
   background-color: #84A1DB !important;
   margin: 0;

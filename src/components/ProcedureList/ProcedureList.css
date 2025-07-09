@@ -85,7 +85,7 @@
   font-weight: 600;
   color: #555;
   white-space: nowrap;
-  text-align: center;
+  text-align: right;
   flex: 0 0 auto;
   min-width: 100px;
 }
@@ -97,6 +97,48 @@
   text-align: right;
   flex: 0 0 auto;
   min-width: 100px;
+}
+
+.remove-procedure-btn {
+  background-color: #e4ebf0;
+  color: black;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(108, 117, 125, 0.2);
+  flex-shrink: 0;
+  margin-left: 1rem;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.remove-procedure-btn:hover {
+  background-color: #a6acb1;
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(108, 117, 125, 0.3);
+}
+
+.remove-procedure-btn:active {
+  transform: scale(0.95);
+}
+
+.remove-procedure-btn::before {
+  content: "×";
+  font-size: 1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-overlay {
@@ -316,5 +358,10 @@
 
   .procedure-header {
     align-items: flex-start;
+  }
+
+  .remove-procedure-btn {
+    margin-left: 0;
+    margin-top: 0.5rem;
   }
 }
