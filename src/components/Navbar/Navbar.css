@@ -25,20 +25,6 @@
   width: auto;
 }
 
-/* Informações da ONG selecionada */
-.selected-ong-info {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  color: white;
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-left: 2rem;
-}
-
 .ong-icon {
   font-size: 0.9rem;
 }
@@ -193,7 +179,6 @@
   font-weight: 600;
 }
 
-/* Seção de ONG no dropdown */
 .ong-section {
   padding: 0 1rem;
 }
@@ -293,10 +278,6 @@
     padding: 10px 20px;
     flex-direction: row; 
     gap: 1rem;
-  }
-
-  .selected-ong-info {
-    display: none; /* Oculta na navbar em mobile */
   }
 
   .navbar-links {

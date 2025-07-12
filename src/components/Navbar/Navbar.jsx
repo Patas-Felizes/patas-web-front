@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaUser, FaSignOutAlt, FaChevronDown, FaBuilding } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
 import { useOng } from '../../contexts/OngContext';
@@ -9,10 +9,16 @@ import logo from '../../assets/images/logo.png';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, userData, setUser, setUserData } = useAuth();
   const { selectedOng, clearSelectedOng } = useOng();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+
+  const isOngSelectionPage = location.pathname === '/select-ong' || 
+                            location.pathname === '/create-ong' || 
+                            location.pathname.startsWith('/create-ong/') ||
+                            location.pathname.startsWith('/ong-details/');
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -61,15 +67,8 @@ const Navbar = () => {
         <img src={logo} alt="Patas Felizes" className="logo-image" />
       </Link>
       
-      {/* Mostrar ONG selecionada para protetores */}
-      {user && userData && isProtetor && selectedOng && (
-        <div className="selected-ong-info">
-          <FaBuilding className="ong-icon" />
-          <span className="ong-name">{selectedOng.nome}</span>
-        </div>
-      )}
-      
-      {user && userData && (
+      {/* Só mostrar os links se não estiver na tela de seleção de ONGs e tiver uma ONG selecionada */}
+      {user && userData && !isOngSelectionPage && selectedOng && (
         <ul className="navbar-links">
           <li><Link to="/" className="active">
             {isProtetor ? 'Animais' : 'Pets'}
@@ -104,8 +103,7 @@ const Navbar = () => {
                   <span className="user-type-badge">{getUserTypeLabel()}</span>
                 </div>
                 
-                {/* Seção de ONG para protetores */}
-                {isProtetor && (
+                {isProtetor && !isOngSelectionPage && (
                   <>
                     <hr />
                     <div className="ong-section">

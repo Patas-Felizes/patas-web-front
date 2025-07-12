@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaPlus, FaEdit, FaTrash, FaBuilding, FaUsers } from 'react-icons/fa';
+import { FaPlus, FaBuilding, FaSearch } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
 import { useOng } from '../../contexts/OngContext';
 import { useOngs } from '../../hooks/useOngs';
-import OngFormModal from '../../components/OngFormModal/OngFormModal';
+import Navbar from '../../components/Navbar/Navbar';
 import './OngSelectionPage.css';
 
 const OngSelectionPage = () => {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const { selectOng } = useOng();
-  const { ongs, loading, error, createNewOng, editOng, removeOng, clearError } = useOngs();
+  const { ongs, loading, error, clearError } = useOngs();
   
-  const [showModal, setShowModal] = useState(false);
-  const [editingOng, setEditingOng] = useState(null);
-  const [confirmDelete, setConfirmDelete] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  console.log('OngSelectionPage - ongs:', ongs);
+  console.log('OngSelectionPage - loading:', loading);
+  console.log('OngSelectionPage - error:', error);
+  console.log('OngSelectionPage - userData:', userData);
 
   const handleSelectOng = (ong) => {
     selectOng(ong);
@@ -23,170 +26,128 @@ const OngSelectionPage = () => {
   };
 
   const handleCreateOng = () => {
-    setEditingOng(null);
-    setShowModal(true);
+    navigate('/create-ong');
   };
 
-  const handleEditOng = (ong, e) => {
+  const handleViewDetails = (ong, e) => {
     e.stopPropagation();
-    setEditingOng(ong);
-    setShowModal(true);
+    navigate(`/ong-details/${ong.id}`);
   };
 
-  const handleDeleteOng = async (ongId, e) => {
-    e.stopPropagation();
-    setConfirmDelete(ongId);
-  };
-
-  const confirmDeleteOng = async () => {
-    try {
-      await removeOng(confirmDelete);
-      setConfirmDelete(null);
-    } catch (error) {
-      console.error('Erro ao deletar ONG:', error);
+  const ongsFiltradas = useMemo(() => {
+    if (!ongs || !Array.isArray(ongs)) {
+      console.log('ONGs não é um array válido:', ongs);
+      return [];
     }
-  };
-
-  const handleSaveOng = async (ongData) => {
-    try {
-      if (editingOng) {
-        await editOng(editingOng.id, ongData);
-      } else {
-        await createNewOng(ongData);
-      }
-      setShowModal(false);
-      setEditingOng(null);
-    } catch (error) {
-      console.error('Erro ao salvar ONG:', error);
-    }
-  };
+    
+    return ongs.filter(ong => 
+      (ong.nome && ong.nome.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (ong.endereco?.cidade && ong.endereco.cidade.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (ong.endereco?.estado && ong.endereco.estado.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  }, [ongs, searchTerm]);
 
   if (error) {
     return (
-      <div className="ong-selection-page">
-        <div className="error-container">
-          <h2>Erro ao carregar ONGs</h2>
-          <p>{error}</p>
-          <button onClick={clearError} className="retry-button">
-            Tentar novamente
-          </button>
+      <>
+        <Navbar />
+        <div className="ong-selection-page">
+          <main className="main-content">
+            <div className="error-container">
+              <h2>Erro ao carregar ONGs</h2>
+              <p>{error}</p>
+              <button onClick={clearError} className="retry-button">
+                Tentar novamente
+              </button>
+            </div>
+          </main>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="ong-selection-page">
-      <div className="ong-selection-container">
-        <div className="ong-selection-header">
-          <h1>Olá, {userData?.nome}!</h1>
-          <p>Selecione uma ONG/Abrigo para gerenciar ou cadastre uma nova.</p>
-        </div>
-
-        <div className="ong-actions">
-          <button className="create-ong-btn" onClick={handleCreateOng}>
-            <FaPlus /> Nova ONG/Abrigo
-          </button>
-        </div>
-
-        {loading ? (
-          <div className="loading">Carregando ONGs...</div>
-        ) : (
-          <div className="ongs-grid">
-            {ongs.map(ong => (
-              <div
-                key={ong.id}
-                className="ong-card"
-                onClick={() => handleSelectOng(ong)}
-              >
-                <div className="ong-card-header">
-                  <div className="ong-icon">
-                    <FaBuilding />
-                  </div>
-                  <div className="ong-actions-buttons">
-                    <button
-                      className="edit-btn"
-                      onClick={(e) => handleEditOng(ong, e)}
-                      title="Editar ONG"
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="delete-btn"
-                      onClick={(e) => handleDeleteOng(ong.id, e)}
-                      title="Excluir ONG"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="ong-info">
-                  <h3>{ong.nome}</h3>
-                  {ong.endereco && (
-                    <p className="ong-address">
-                      📍 {ong.endereco.cidade} - {ong.endereco.estado}
-                    </p>
-                  )}
-                  {ong.telefone && (
-                    <p className="ong-contact">📞 {ong.telefone}</p>
-                  )}
-                  <div className="ong-participants">
-                    <FaUsers /> {ong.protetores?.length || 1} protetor(es)
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {!loading && ongs.length === 0 && (
-          <div className="no-ongs">
-            <FaBuilding className="no-ongs-icon" />
-            <h3>Nenhuma ONG/Abrigo cadastrada</h3>
-            <p>Crie sua primeira ONG/Abrigo para começar a gerenciar seus animais.</p>
-            <button className="create-first-ong-btn" onClick={handleCreateOng}>
-              <FaPlus /> Criar primeira ONG/Abrigo
+    <>
+      <Navbar />
+      <div className="ong-selection-page">
+        <main className="main-content">
+          <div className="action-bar">
+            <button className="register-ong-btn" onClick={handleCreateOng}>
+              <FaPlus /> Cadastrar Abrigo
             </button>
-          </div>
-        )}
-
-        {showModal && (
-          <OngFormModal
-            ong={editingOng}
-            onSave={handleSaveOng}
-            onCancel={() => {
-              setShowModal(false);
-              setEditingOng(null);
-            }}
-          />
-        )}
-
-        {confirmDelete && (
-          <div className="modal-overlay">
-            <div className="confirm-modal">
-              <h3>Confirmar Exclusão</h3>
-              <p>Tem certeza que deseja excluir esta ONG/Abrigo?</p>
-              <p className="warning">Esta ação não pode ser desfeita e todos os dados associados serão perdidos.</p>
-              <div className="modal-actions">
-                <button 
-                  className="cancel-btn"
-                  onClick={() => setConfirmDelete(null)}
-                >
-                  Cancelar
-                </button>
-                <button 
-                  className="confirm-btn"
-                  onClick={confirmDeleteOng}
-                >
-                  Excluir
-                </button>
-              </div>
+            
+            <div className="search-container">
+              <FaSearch className="search-icon" />
+              <input 
+                type="text" 
+                placeholder="Pesquisar por nome ou localização" 
+                className="search-input"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
           </div>
-        )}
+
+          <h3>Minhas ONGs/Abrigos ({ongsFiltradas.length})</h3>
+
+          {loading ? (
+            <div className="loading">Carregando ONGs...</div>
+          ) : (
+            <div className="ongs-grid">
+              {ongsFiltradas.map(ong => (
+                <div
+                  key={ong.id}
+                  className="ong-card"
+                  onClick={() => handleSelectOng(ong)}
+                >
+                  <div className="ong-card-image">
+                    <FaBuilding />
+                  </div>
+                  
+                  <div className="ong-card-content">
+                    <div className="ong-card-info">
+                      <h4>{ong.nome}</h4>
+                      {ong.endereco && (ong.endereco.cidade || ong.endereco.estado || ong.endereco.numero || ong.endereco.rua) && (
+                        <p className="ong-address">
+                          Endereço: {[ong.endereco.rua, ong.endereco.numero, ong.endereco.cidade, ong.endereco.estado].filter(Boolean).join(', ')}
+                        </p>
+                      )}
+                    </div>
+                    
+                    <div className="ong-card-actions">
+                      <button
+                        className="details-btn"
+                        onClick={(e) => handleViewDetails(ong, e)}
+                        title="Ver detalhes"
+                      >
+                        Detalhes
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {!loading && ongsFiltradas.length === 0 && (!ongs || ongs.length === 0) && (
+            <div className="no-ongs">
+              <FaBuilding className="no-ongs-icon" />
+              <h3>Nenhuma ONG/Abrigo cadastrada</h3>
+              <p>Crie sua primeira ONG/Abrigo para começar a gerenciar seus animais.</p>
+              <button className="create-first-ong-btn" onClick={handleCreateOng}>
+                <FaPlus /> Criar primeira ONG/Abrigo
+              </button>
+            </div>
+          )}
+
+          {!loading && ongsFiltradas.length === 0 && ongs && ongs.length > 0 && (
+            <div className="no-ongs">
+              <p>Nenhuma ONG/Abrigo encontrada com o termo pesquisado.</p>
+            </div>
+          )}
+        </main>
       </div>
-    </div>
+    </>
   );
 };
 

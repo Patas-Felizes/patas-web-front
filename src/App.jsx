@@ -6,6 +6,8 @@ import OngProtectedRoute from './components/OngProtectedRoute/OngProtectedRoute'
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import OngSelectionPage from './pages/OngSelectionPage/OngSelectionPage';
+import OngCreatePage from './pages/OngCreatePage/OngCreatePage';
+import OngDetailsPage from './pages/OngDetailsPage/OngDetailsPage';
 import HomePage from './pages/HomePage/HomePage';
 import PetDetailsPage from './pages/PetDetailsPage/PetDetailsPage';
 import PetRegisterPage from './pages/PetRegisterPage/PetRegisterPage';
@@ -25,6 +27,33 @@ function App() {
             element={
               <ProtectedRoute requiredUserType="protetor">
                 <OngSelectionPage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/create-ong" 
+            element={
+              <ProtectedRoute requiredUserType="protetor">
+                <OngCreatePage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/create-ong/:ongId" 
+            element={
+              <ProtectedRoute requiredUserType="protetor">
+                <OngCreatePage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/ong-details/:ongId" 
+            element={
+              <ProtectedRoute requiredUserType="protetor">
+                <OngDetailsPage />
               </ProtectedRoute>
             } 
           />
