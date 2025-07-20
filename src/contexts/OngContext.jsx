@@ -13,14 +13,12 @@ export const useOng = () => {
 export const OngProvider = ({ children }) => {
   const [selectedOng, setSelectedOng] = useState(null);
 
-  // Salvar ONG selecionada no localStorage
   useEffect(() => {
     if (selectedOng) {
       localStorage.setItem('selectedOng', JSON.stringify(selectedOng));
     }
   }, [selectedOng]);
 
-  // Carregar ONG selecionada do localStorage
   useEffect(() => {
     const storedOng = localStorage.getItem('selectedOng');
     if (storedOng) {

@@ -60,6 +60,7 @@ const Navbar = () => {
   };
 
   const isProtetor = userData?.tipoUsuario === 'protetor';
+  const isAdotante = userData?.tipoUsuario === 'adotante';
 
   return (
     <nav className="navbar">
@@ -67,14 +68,32 @@ const Navbar = () => {
         <img src={logo} alt="Patas Felizes" className="logo-image" />
       </Link>
       
-      {/* Só mostrar os links se não estiver na tela de seleção de ONGs e tiver uma ONG selecionada */}
-      {user && userData && !isOngSelectionPage && selectedOng && (
+      {user && userData && !isOngSelectionPage && (isAdotante || (isProtetor && selectedOng)) && (
         <ul className="navbar-links">
-          <li><Link to="/" className="active">
-            {isProtetor ? 'Animais' : 'Pets'}
-          </Link></li>
+          <li>
+            <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
+              {isProtetor ? 'Animais' : 'Pets'}
+            </Link>
+          </li>
           {isProtetor && (
-            <li><a href="#">Solicitações de Adoção</a></li>
+            <li>
+              <Link 
+                to="/solicitacoes-adocao" 
+                className={location.pathname === '/solicitacoes-adocao' ? 'active' : ''}
+              >
+                Solicitações de Adoção
+              </Link>
+            </li>
+          )}
+          {isAdotante && (
+            <li>
+              <Link 
+                to="/minhas-solicitacoes" 
+                className={location.pathname === '/minhas-solicitacoes' ? 'active' : ''}
+              >
+                Minhas Solicitações
+              </Link>
+            </li>
           )}
         </ul>
       )}

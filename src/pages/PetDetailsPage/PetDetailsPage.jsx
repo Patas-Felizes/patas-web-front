@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 import ProcedureList from '../../components/ProcedureList/ProcedureList';
+import ConsentModal from '../../components/ConsentModal/ConsentModal';
 import { usePet, usePets } from '../../hooks/usePets';
 import { useAuth } from '../../contexts/AuthContext'; 
-import { createAdoptionRequest } from '../../services/firebase'; 
 import './PetDetailsPage.css';
 
 const PetDetailsPage = () => {
@@ -13,12 +13,12 @@ const PetDetailsPage = () => {
   const { pet, loading, error } = usePet(petId);
   const { removePet, loading: actionLoading } = usePets();
   const { userData, isAdotante } = useAuth(); 
+  const [showConsentModal, setShowConsentModal] = useState(false);
 
   useEffect(() => {
     document.body.classList.add('no-scroll');
     document.documentElement.classList.add('no-scroll');
     document.getElementById('root').classList.add('no-scroll');
-
     return () => {
       document.body.classList.remove('no-scroll');
       document.documentElement.classList.remove('no-scroll');
@@ -46,35 +46,17 @@ const PetDetailsPage = () => {
     navigate(-1);
   };
 
-  const handleAdoptRequest = async () => {
+  const handleAdoptRequest = () => {
     if (!userData || !userData.uid) {
       alert('Você precisa estar logado para solicitar adoção.');
       navigate('/login');
       return;
     }
-
     if (pet.status !== 'Para adoção') {
       alert('Este pet não está disponível para adoção no momento.');
       return;
     }
-
-    if (window.confirm(`Você deseja solicitar a adoção de ${pet.nome}?`)) {
-      try {
-        const adoptionData = {
-          id_animal: petId,
-          id_adotante: userData.uid,
-          nome_adotante: userData.nome,
-          email_adotante: userData.email,
-          nome_animal: pet.nome,
-          status: 'pendente',
-        };
-
-        await createAdoptionRequest(adoptionData);
-        alert('Solicitação de adoção enviada com sucesso! O protetor responsável será notificado.');
-      } catch (err) {
-        alert(`Erro ao solicitar adoção: ${err.message}`);
-      }
-    }
+    setShowConsentModal(true);
   };
 
   if (loading) {
@@ -153,6 +135,14 @@ const PetDetailsPage = () => {
           <ProcedureList petId={petId} isAdotante={isAdotante} />
         </div>
       </div>
+
+      {/* Modal do termo de consentimento */}
+      {showConsentModal && (
+        <ConsentModal 
+          pet={pet} 
+          onClose={() => setShowConsentModal(false)} 
+        />
+      )}
     </div>
   );
 };

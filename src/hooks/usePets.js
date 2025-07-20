@@ -158,8 +158,6 @@ export const usePets = () => {
   };
 
   useEffect(() => {
-    // Para protetores, só carrega se tiver ONG selecionada
-    // Para adotantes, carrega sempre
     if (!isProtetor || (isProtetor && ongId)) {
       loadPets();
     }

@@ -22,7 +22,6 @@ import { db, storage } from '../config/firebase';
 const PETS_COLLECTION = 'pets';
 const PROCEDURES_COLLECTION = 'procedimentos'; 
 
-// Modificado para incluir ongId nos pets
 export const getAllPets = async (ongId = null) => {
   try {
     const petsRef = collection(db, PETS_COLLECTION);
@@ -35,7 +34,6 @@ export const getAllPets = async (ongId = null) => {
         orderBy('createdAt', 'desc')
       );
     } else {
-      // Para adotantes, buscar todos os pets disponíveis para adoção
       q = query(
         petsRef,
         where('status', '==', 'Para adoção'),
@@ -79,12 +77,11 @@ export const getPetById = async (petId) => {
   }
 };
 
-// Modificado para incluir ongId
 export const addPet = async (petData, ongId) => {
   try {
     const petWithTimestamp = {
       ...petData,
-      ongId, // Associa o pet à ONG
+      ongId, 
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
@@ -136,7 +133,6 @@ export const deletePet = async (petId) => {
   }
 };
 
-// Modificado para incluir ongId nos filtros
 export const searchPets = async (filters = {}, ongId = null) => {
   try {
     const petsRef = collection(db, PETS_COLLECTION);
@@ -145,7 +141,6 @@ export const searchPets = async (filters = {}, ongId = null) => {
     if (ongId) {
       constraints.push(where('ongId', '==', ongId));
     } else {
-      // Para adotantes, apenas pets disponíveis para adoção
       constraints.push(where('status', '==', 'Para adoção'));
     }
 
@@ -158,7 +153,6 @@ export const searchPets = async (filters = {}, ongId = null) => {
     }
 
     if (filters.status && ongId) {
-      // Apenas protetores podem filtrar por status
       constraints.push(where('status', '==', filters.status));
     }
 
@@ -285,38 +279,42 @@ export const deleteProcedure = async (procedureId) => {
   }
 };
 
-const ADOPTION_REQUESTS_COLLECTION = 'adoptionRequests';
+const ADOPTION_REQUESTS_COLLECTION = 'solicitacoesAdocao';
 
-export const createAdoptionRequest = async (adoptionData) => {
+export const createAdoptionRequestWithForm = async (adoptionData) => {
   try {
     const requestWithTimestamp = {
       ...adoptionData,
-      status: 'pendente',
-      createdAt: serverTimestamp(),
+      status: 'em_espera',
+      dataEnvio: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
-
+    
     const docRef = await addDoc(
       collection(db, ADOPTION_REQUESTS_COLLECTION),
       requestWithTimestamp,
     );
-
+    
     return {
       id: docRef.id,
       ...requestWithTimestamp,
     };
   } catch (error) {
     console.error('Erro ao criar solicitação de adoção:', error);
-    throw new Error('Falha ao solicitar adoção');
+    throw new Error('Falha ao enviar solicitação de adoção');
   }
 };
 
-export const getAdoptionRequests = async () => {
+export const getAdoptionRequestsByAdotante = async (adotanteId) => {
   try {
     const requestsRef = collection(db, ADOPTION_REQUESTS_COLLECTION);
-    const q = query(requestsRef, orderBy('createdAt', 'desc'));
+    const q = query(
+      requestsRef,
+      where('idAdotante', '==', adotanteId),
+      orderBy('dataEnvio', 'desc')
+    );
+    
     const querySnapshot = await getDocs(q);
-
     const requests = [];
     querySnapshot.forEach((doc) => {
       requests.push({
@@ -324,25 +322,69 @@ export const getAdoptionRequests = async () => {
         ...doc.data(),
       });
     });
-
+    
     return requests;
   } catch (error) {
-    console.error('Erro ao buscar solicitações:', error);
-    throw new Error('Falha ao carregar solicitações');
+    console.error('Erro ao buscar solicitações do adotante:', error);
+    throw new Error('Falha ao carregar suas solicitações');
   }
 };
 
-export const updateAdoptionRequestStatus = async (requestId, status) => {
+export const getAdoptionRequestsByOng = async (ongId) => {
+  try {
+    const requestsRef = collection(db, ADOPTION_REQUESTS_COLLECTION);
+    const q = query(
+      requestsRef,
+      where('idOng', '==', ongId),
+      orderBy('dataEnvio', 'desc')
+    );
+    
+    const querySnapshot = await getDocs(q);
+    const requests = [];
+    querySnapshot.forEach((doc) => {
+      requests.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+    
+    return requests;
+  } catch (error) {
+    console.error('Erro ao buscar solicitações da ONG:', error);
+    throw new Error('Falha ao carregar solicitações da ONG');
+  }
+};
+
+export const updateAdoptionRequestStatusWithResponse = async (requestId, status, responseMessage = '') => {
   try {
     const requestRef = doc(db, ADOPTION_REQUESTS_COLLECTION, requestId);
     await updateDoc(requestRef, {
       status,
+      responseMessage,
+      responseDate: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });
-
-    return { id: requestId, status };
+    
+    return { id: requestId, status, responseMessage };
   } catch (error) {
     console.error('Erro ao atualizar solicitação:', error);
     throw new Error('Falha ao atualizar solicitação');
+  }
+};
+
+export const uploadAdoptionPhotos = async (files, requestId) => {
+  try {
+    const uploadPromises = files.map(async (file, index) => {
+      const timestamp = Date.now();
+      const fileName = `${requestId}_ambiente_${index}_${timestamp}_${file.name}`;
+      const storageRef = ref(storage, `adoption_photos/${fileName}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      return await getDownloadURL(snapshot.ref);
+    });
+    
+    return await Promise.all(uploadPromises);
+  } catch (error) {
+    console.error('Erro no upload das fotos:', error);
+    throw new Error('Falha no upload das fotos dos ambientes');
   }
 };

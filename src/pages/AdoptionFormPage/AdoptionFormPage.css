@@ -1,0 +1,367 @@
+.adoption-form-page {
+  background-color: #f8f9fa;
+  height: 100vh;
+  overflow: hidden;
+  padding-top: 80px;
+  box-sizing: border-box;
+}
+
+.adoption-form-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  gap: 2rem;
+  height: calc(100vh - 80px);
+  box-sizing: border-box;
+}
+
+.adoption-form-left {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+}
+
+.pet-image-card {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  width: 100%;
+}
+
+.pet-form-image {
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.pet-info-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pet-info-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.pet-info-card p {
+  margin: 0.25rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.action-button {
+  padding: 0.7rem 1.8rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back-button {
+  background-color: #EBEFF9;
+  color: black;
+}
+
+.back-button:hover {
+  background-color: #d6dff2;
+}
+
+.adoption-form-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  overflow-y: auto;
+  height: 100%;
+  padding-right: 1rem;
+  padding-bottom: 3rem;
+  box-sizing: border-box;
+}
+
+.adoption-form-right::-webkit-scrollbar {
+  width: 8px;
+}
+
+.adoption-form-right::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.adoption-form-right::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.adoption-form-right::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.form-header {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-header h1 {
+  margin: 0;
+  color: #333;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.form-introduction {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #e3f2fd;
+}
+
+.form-introduction p {
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+  color: #333;
+}
+
+.form-introduction p:last-child {
+  margin-bottom: 0;
+}
+
+.adoption-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-section h3 {
+  margin: 0 0 1.5rem 0;
+  color: #333;
+  font-size: 1.3rem;
+  border-bottom: 2px solid #84A1DB;
+  padding-bottom: 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #555;
+  line-height: 1.5;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #84A1DB;
+  box-shadow: 0 0 0 2px rgba(132, 161, 219, 0.2);
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-group select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='m6 9 6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  cursor: pointer;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.declaration-label {
+  background-color: #fff3cd;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ffeaa7;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.file-count {
+  color: #28a745;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.form-actions {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
+.submit-button {
+  padding: 1rem 3rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 1rem;
+  background-color: #84A1DB;
+  color: white;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #6b8bc7;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-loading {
+  text-align: center;
+  font-size: 1.5rem;
+  padding: 3rem;
+  color: #666;
+}
+
+@media (max-width: 968px) {
+  .adoption-form-page {
+    overflow: visible;
+    height: auto;
+  }
+  
+  .adoption-form-container {
+    flex-direction: column;
+    padding: 1rem;
+    height: auto;
+  }
+  
+  .adoption-form-left {
+    flex: none;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .pet-image-card {
+    max-width: 100px;
+    flex-shrink: 0;
+  }
+
+  .pet-form-image {
+    max-width: 100px;
+  }
+
+  .pet-info-card {
+    flex: 1;
+    margin: 0 1rem;
+    text-align: left;
+  }
+  
+  .adoption-form-right {
+    overflow-y: visible;
+    height: auto;
+    padding-right: 0;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-actions {
+    padding: 1rem;
+  }
+
+  .submit-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .adoption-form-left {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .pet-info-card {
+    margin: 0;
+    text-align: center;
+  }
+
+  .back-button {
+    width: 100%;
+  }
+}

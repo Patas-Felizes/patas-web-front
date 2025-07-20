@@ -11,6 +11,9 @@ import OngDetailsPage from './pages/OngDetailsPage/OngDetailsPage';
 import HomePage from './pages/HomePage/HomePage';
 import PetDetailsPage from './pages/PetDetailsPage/PetDetailsPage';
 import PetRegisterPage from './pages/PetRegisterPage/PetRegisterPage';
+import AdoptionRequestsPage from './pages/AdoptionRequestsPage/AdoptionRequestsPage';
+import MyAdoptionRequestsPage from './pages/MyAdoptionRequestsPage/MyAdoptionRequestsPage';
+import AdoptionFormPage from './pages/AdoptionFormPage/AdoptionFormPage';
 import './App.css';
 import './components/ProtectedRoute/LoadingScreen.css';
 
@@ -98,6 +101,38 @@ function App() {
                 <OngProtectedRoute>
                   <PetRegisterPage />
                 </OngProtectedRoute>
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Página de solicitações para protetores */}
+          <Route 
+            path="/solicitacoes-adocao" 
+            element={
+              <ProtectedRoute requiredUserType="protetor">
+                <OngProtectedRoute>
+                  <AdoptionRequestsPage />
+                </OngProtectedRoute>
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Página de solicitações para adotantes */}
+          <Route 
+            path="/minhas-solicitacoes" 
+            element={
+              <ProtectedRoute requiredUserType="adotante">
+                <MyAdoptionRequestsPage />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Página do formulário de adoção */}
+          <Route 
+            path="/formulario-adocao/:petId" 
+            element={
+              <ProtectedRoute requiredUserType="adotante">
+                <AdoptionFormPage />
               </ProtectedRoute>
             } 
           />
