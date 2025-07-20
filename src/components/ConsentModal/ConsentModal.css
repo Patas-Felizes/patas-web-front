@@ -24,13 +24,14 @@
 }
 
 .consent-modal-header {
-  padding: 1.5rem;
+  padding: 1.4rem;
   border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 0px 1fr 40px;
+  align-items: center;
   background-color: #f8f9fa;
-  gap: 1rem;
+  gap: 0.4rem;
+  min-height: 80px;
 }
 
 .consent-modal-header h2 {
@@ -38,7 +39,8 @@
   color: #333;
   font-size: 1.3rem;
   line-height: 1.4;
-}
+  text-align: left;
+  grid-column: 2; 
 
 .close-button {
   background: none;
@@ -54,7 +56,8 @@
   justify-content: center;
   border-radius: 50%;
   transition: background-color 0.2s;
-  flex-shrink: 0;
+  grid-column: 3;
+  justify-self: end;
 }
 
 .close-button:hover {
@@ -65,13 +68,15 @@
   padding: 1.5rem;
   overflow-y: auto;
   flex: 1;
+  text-align: left;
 }
 
-.consent-modal-content > p {
+.intro-text {
   margin: 0 0 1.5rem 0;
   font-weight: 600;
   color: #333;
   line-height: 1.6;
+  text-align: left;
 }
 
 .consent-terms {
@@ -85,23 +90,18 @@
   margin-bottom: 1rem;
   border-left: 4px solid #84A1DB;
   line-height: 1.6;
+  text-align: left;
 }
 
 .term-item strong {
   color: #333;
-  display: block;
-  margin-bottom: 0.5rem;
+  display: inline;
+  margin-right: 0.5rem;
 }
 
-.thanks-message {
-  background-color: #e3f2fd;
-  padding: 1rem;
-  border-radius: 6px;
-  margin-bottom: 1.5rem;
-  text-align: center;
+.term-item em {
+  font-weight: 600;
   font-style: italic;
-  color: #1976d2;
-  line-height: 1.6;
 }
 
 .consent-checkbox {
@@ -120,6 +120,7 @@
   font-weight: 600;
   color: #856404;
   line-height: 1.5;
+  text-align: left;
 }
 
 .consent-checkbox input[type="checkbox"] {
@@ -198,5 +199,6 @@
   .cancel-button,
   .proceed-button {
     width: 100%;
+    }
   }
 }
