@@ -24,13 +24,13 @@
 }
 
 .consent-modal-header {
-  padding: 1.4rem;
+  padding: 1.5rem;
   border-bottom: 1px solid #eee;
-  display: grid;
-  grid-template-columns: 0px 1fr 40px;
-  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
   background-color: #f8f9fa;
-  gap: 0.4rem;
+  gap: 1rem;
   min-height: 80px;
 }
 
@@ -39,8 +39,9 @@
   color: #333;
   font-size: 1.3rem;
   line-height: 1.4;
-  text-align: left;
-  grid-column: 2; 
+  text-align: left; 
+  flex: 1;
+}
 
 .close-button {
   background: none;
@@ -56,8 +57,9 @@
   justify-content: center;
   border-radius: 50%;
   transition: background-color 0.2s;
-  grid-column: 3;
-  justify-self: end;
+  flex-shrink: 0;
+  align-self: flex-start; 
+  margin-top: 0.5rem; 
 }
 
 .close-button:hover {
@@ -68,12 +70,12 @@
   padding: 1.5rem;
   overflow-y: auto;
   flex: 1;
-  text-align: left;
+  text-align: left; 
 }
 
-.intro-text {
+.intro-text { 
   margin: 0 0 1.5rem 0;
-  font-weight: 600;
+  font-weight: 500;
   color: #333;
   line-height: 1.6;
   text-align: left;
@@ -90,16 +92,16 @@
   margin-bottom: 1rem;
   border-left: 4px solid #84A1DB;
   line-height: 1.6;
-  text-align: left;
+  text-align: left; 
 }
 
 .term-item strong {
   color: #333;
-  display: inline;
+  display: inline; 
   margin-right: 0.5rem;
 }
 
-.term-item em {
+.term-item em { 
   font-weight: 600;
   font-style: italic;
 }
@@ -199,6 +201,5 @@
   .cancel-button,
   .proceed-button {
     width: 100%;
-    }
   }
 }
