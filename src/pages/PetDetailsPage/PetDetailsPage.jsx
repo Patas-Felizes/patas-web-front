@@ -136,7 +136,6 @@ const PetDetailsPage = () => {
         </div>
       </div>
 
-      {/* Modal do termo de consentimento */}
       {showConsentModal && (
         <ConsentModal 
           pet={pet} 

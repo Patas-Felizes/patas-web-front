@@ -70,6 +70,59 @@
   margin-bottom: 0;
 }
 
+.pet-card-status {
+  margin-top: 0.8rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.status-approved {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.status-rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.status-cancelled {
+  background-color: #e2e3e5;
+  color: #383d41;
+  border: 1px solid #d6d8db;
+}
+
+.requests-count {
+  background-color: #84A1DB;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.pet-card-extra-info {
+  margin-top: 0.8rem;
+  padding: 0.6rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #666;
+  text-align: center;
+}
+
 @media (max-width: 768px) {
   .pet-card {
     max-width: 100%;

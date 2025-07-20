@@ -14,6 +14,7 @@ import PetRegisterPage from './pages/PetRegisterPage/PetRegisterPage';
 import AdoptionRequestsPage from './pages/AdoptionRequestsPage/AdoptionRequestsPage';
 import MyAdoptionRequestsPage from './pages/MyAdoptionRequestsPage/MyAdoptionRequestsPage';
 import AdoptionFormPage from './pages/AdoptionFormPage/AdoptionFormPage';
+import PetAdoptionRequestsPage from './pages/PetAdoptionRequestsPage/PetAdoptionRequestsPage';
 import './App.css';
 import './components/ProtectedRoute/LoadingScreen.css';
 
@@ -105,7 +106,6 @@ function App() {
             } 
           />
 
-          {/* Página de solicitações para protetores */}
           <Route 
             path="/solicitacoes-adocao" 
             element={
@@ -117,7 +117,6 @@ function App() {
             } 
           />
 
-          {/* Página de solicitações para adotantes */}
           <Route 
             path="/minhas-solicitacoes" 
             element={
@@ -127,12 +126,22 @@ function App() {
             } 
           />
 
-          {/* Página do formulário de adoção */}
           <Route 
             path="/formulario-adocao/:petId" 
             element={
               <ProtectedRoute requiredUserType="adotante">
                 <AdoptionFormPage />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
+            path="/solicitacoes-adocao/:petId" 
+            element={
+              <ProtectedRoute requiredUserType="protetor">
+                <OngProtectedRoute>
+                  <PetAdoptionRequestsPage />
+                </OngProtectedRoute>
               </ProtectedRoute>
             } 
           />

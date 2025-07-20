@@ -388,3 +388,14 @@ export const uploadAdoptionPhotos = async (files, requestId) => {
     throw new Error('Falha no upload das fotos dos ambientes');
   }
 };
+
+export const deleteAdoptionRequest = async (requestId) => {
+  try {
+    const requestRef = doc(db, 'solicitacoesAdocao', requestId);
+    await deleteDoc(requestRef);
+    return requestId;
+  } catch (error) {
+    console.error('Erro ao deletar solicitação:', error);
+    throw new Error('Falha ao excluir solicitação');
+  }
+};

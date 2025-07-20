@@ -88,6 +88,23 @@ export const useAdoptionRequests = () => {
     }
   };
 
+  const deleteRequest = async (requestId) => {
+  setLoading(true);
+  setError(null);
+  try {
+    await deleteAdoptionRequest(requestId);
+    setRequests(prevRequests => 
+      prevRequests.filter(request => request.id !== requestId)
+    );
+  } catch (err) {
+    setError(err.message);
+    console.error('Erro ao excluir solicitação:', err);
+    throw err;
+  } finally {
+    setLoading(false);
+  }
+};
+
   useEffect(() => {
     if (userData && (!isProtetor || (isProtetor && selectedOng))) {
       loadRequests();
@@ -101,6 +118,7 @@ export const useAdoptionRequests = () => {
     loadRequests,
     createRequest,
     updateRequestStatus,
+    deleteRequest,
     clearError: () => setError(null)
   };
 };

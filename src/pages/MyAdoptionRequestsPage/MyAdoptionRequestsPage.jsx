@@ -1,20 +1,58 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
+import PetCard from '../../components/PetCard/PetCard';
 import { useAdoptionRequests } from '../../hooks/useAdoptionRequests';
 import { useAuth } from '../../contexts/AuthContext';
+import { getPetById } from '../../services/firebase';
 import './MyAdoptionRequestsPage.css';
 
 const MyAdoptionRequestsPage = () => {
   const navigate = useNavigate();
   const { userData } = useAuth();
-  const { requests, loading, error } = useAdoptionRequests();
+  const { requests, loading, error, deleteRequest } = useAdoptionRequests();
+  const [requestsWithPetData, setRequestsWithPetData] = useState([]);
+  const [loadingPetData, setLoadingPetData] = useState(true);
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
   useEffect(() => {
     if (userData && userData.tipoUsuario !== 'adotante') {
       navigate('/');
     }
   }, [userData, navigate]);
+
+  useEffect(() => {
+    const fetchPetData = async () => {
+      if (requests.length === 0) {
+        setLoadingPetData(false);
+        return;
+      }
+
+      try {
+        const requestsWithPets = await Promise.all(
+          requests.map(async (request) => {
+            try {
+              const pet = await getPetById(request.idAnimal);
+              return {
+                ...request,
+                pet: pet
+              };
+            } catch (error) {
+              console.error('Erro ao buscar pet:', error);
+              return request;
+            }
+          })
+        );
+        setRequestsWithPetData(requestsWithPets);
+      } catch (error) {
+        console.error('Erro ao buscar dados dos pets:', error);
+        setRequestsWithPetData(requests);
+      }
+      setLoadingPetData(false);
+    };
+
+    fetchPetData();
+  }, [requests]);
 
   const getStatusText = (status) => {
     const statusMap = {
@@ -49,17 +87,39 @@ const MyAdoptionRequestsPage = () => {
     return date.toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      year: 'numeric'
     });
+  };
+
+  const handleCardClick = (request) => {
+    setSelectedRequest(request);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedRequest(null);
+  };
+
+  const handleEdit = (request) => {
+    navigate(`/formulario-adocao/${request.idAnimal}?edit=${request.id}`);
+  };
+
+  const handleDelete = async (request) => {
+  if (window.confirm(`Tem certeza que deseja excluir a solicitação para ${request.nomeAnimal}?`)) {
+      try {
+        await deleteRequest(request.id);
+        alert('Solicitação excluída com sucesso!');
+        setSelectedRequest(null);
+      } catch (error) {
+        alert(`Erro ao excluir solicitação: ${error.message}`);
+      }
+    }
   };
 
   if (userData && userData.tipoUsuario !== 'adotante') {
     return null;
   }
 
-  if (loading) {
+  if (loading || loadingPetData) {
     return (
       <div className="my-requests-page">
         <Navbar />
@@ -74,9 +134,6 @@ const MyAdoptionRequestsPage = () => {
       <div className="my-requests-container">
         <div className="page-header">
           <h1>Minhas Solicitações de Adoção</h1>
-          <button onClick={() => navigate('/')} className="back-button">
-            Voltar aos Pets
-          </button>
         </div>
 
         {error && (
@@ -85,7 +142,7 @@ const MyAdoptionRequestsPage = () => {
           </div>
         )}
 
-        {requests.length === 0 ? (
+        {requestsWithPetData.length === 0 ? (
           <div className="no-requests">
             <p>Você ainda não fez nenhuma solicitação de adoção.</p>
             <button onClick={() => navigate('/')} className="browse-pets-button">
@@ -93,67 +150,75 @@ const MyAdoptionRequestsPage = () => {
             </button>
           </div>
         ) : (
-          <div className="requests-list">
-            {requests.map((request) => (
-              <div key={request.id} className="request-card">
-                <div className="request-header">
-                  <div className="animal-info">
-                    <h3>{request.nomeAnimal}</h3>
-                    <p className="ong-name">ONG: {request.nomeOng}</p>
-                  </div>
-                  <div className={`status-badge ${getStatusClass(request.status)}`}>
-                    {getStatusText(request.status)}
-                  </div>
-                </div>
-
-                <div className="request-details">
-                  <div className="detail-item">
-                    <span className="detail-label">Data da solicitação:</span>
-                    <span className="detail-value">{formatDate(request.dataEnvio)}</span>
-                  </div>
-
-                  {request.responseDate && (
-                    <div className="detail-item">
-                      <span className="detail-label">Data da resposta:</span>
-                      <span className="detail-value">{formatDate(request.responseDate)}</span>
-                    </div>
-                  )}
-
-                  {request.responseMessage && (
-                    <div className="response-message">
-                      <span className="detail-label">Mensagem da ONG:</span>
-                      <p className="response-text">{request.responseMessage}</p>
-                    </div>
-                  )}
-
-                  <div className="contact-info">
-                    <span className="detail-label">Contato enviado:</span>
-                    <span className="detail-value">
-                      {request.informacoesPessoais?.nomeCompleto} - {request.informacoesPessoais?.telefone}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="request-actions">
-                  <button 
-                    onClick={() => navigate(`/pets/${request.idAnimal}`)}
-                    className="view-pet-button"
-                  >
-                    Ver Pet
-                  </button>
-                  
-                  {request.status === 'aprovada' && (
-                    <div className="approved-message">
-                      <p>🎉 Parabéns! Sua solicitação foi aprovada!</p>
-                      <p>Entre em contato com a ONG para finalizar o processo.</p>
-                    </div>
-                  )}
-                </div>
-              </div>
+          <div className="requests-grid">
+            {requestsWithPetData.map((request) => (
+              <PetCard
+                key={request.id}
+                pet={request.pet}
+                showStatus={true}
+                statusText={getStatusText(request.status)}
+                statusClass={getStatusClass(request.status)}
+                extraInfo={`Solicitado em: ${formatDate(request.dataEnvio)}`}
+                onClick={() => handleCardClick(request)}
+              />
             ))}
           </div>
         )}
       </div>
+
+      {selectedRequest && (
+        <div className="modal-overlay" onClick={handleCloseModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Detalhes da Solicitação - {selectedRequest.nomeAnimal}</h2>
+              <button onClick={handleCloseModal} className="close-button">×</button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="request-details">
+                <p><strong>Status:</strong> {getStatusText(selectedRequest.status)}</p>
+                <p><strong>ONG:</strong> {selectedRequest.nomeOng}</p>
+                <p><strong>Data da solicitação:</strong> {formatDate(selectedRequest.dataEnvio)}</p>
+                {selectedRequest.responseDate && (
+                  <p><strong>Data da resposta:</strong> {formatDate(selectedRequest.responseDate)}</p>
+                )}
+                
+                {selectedRequest.responseMessage && (
+                  <div className="response-section">
+                    <p><strong>Resposta da ONG:</strong></p>
+                    <div className="response-message">
+                      {selectedRequest.responseMessage}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="modal-actions">
+                <button onClick={handleCloseModal} className="btn-secondary">
+                  Fechar
+                </button>
+                
+                {selectedRequest.status === 'em_espera' && (
+                  <>
+                    <button 
+                      onClick={() => handleEdit(selectedRequest)} 
+                      className="btn-primary"
+                    >
+                      Editar
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(selectedRequest)} 
+                      className="btn-danger"
+                    >
+                      Excluir
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
