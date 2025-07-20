@@ -49,7 +49,6 @@ const PetAdoptionRequestsPage = () => {
       try {
         await updateRequestStatus(requestId, 'aprovada', responseMessage || 'Solicitação aprovada! Entre em contato conosco para finalizar o processo.');
         
-        // Atualizar estado local
         setRequests(prev => 
           prev.map(req => 
             req.id === requestId 
@@ -117,20 +116,32 @@ const PetAdoptionRequestsPage = () => {
   const formatDate = (timestamp) => {
     if (!timestamp) return 'Data não disponível';
     
-    let date;
-    if (timestamp.toDate) {
-      date = timestamp.toDate();
-    } else {
-      date = new Date(timestamp);
+    try {
+      let date;
+      
+      if (timestamp && timestamp.toDate) {
+        date = timestamp.toDate();
+      } else if (timestamp.seconds) {
+        date = new Date(timestamp.seconds * 1000);
+      } else {
+        date = new Date(timestamp);
+      }
+      
+      if (isNaN(date.getTime())) {
+        return 'Data não disponível';
+      }
+      
+      return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      console.error('Erro ao formatar data:', timestamp);
+      return 'Data não disponível';
     }
-    
-    return date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   };
 
   const toggleExpanded = (requestId) => {
