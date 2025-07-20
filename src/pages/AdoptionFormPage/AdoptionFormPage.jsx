@@ -173,11 +173,6 @@ const AdoptionFormPage = () => {
           <div className="pet-image-card">
             <img src={pet.foto} alt={pet.nome} className="pet-form-image" />
           </div>
-          <div className="pet-info-card">
-            <h3>{pet.nome}</h3>
-            <p>{pet.sexo}</p>
-            <p>{pet.idade?.valor ? `${pet.idade.valor} ${pet.idade.unidade}` : 'Idade não informada'}</p>
-          </div>
           <button 
             type="button" 
             onClick={() => navigate(`/pets/${petId}`)} 
@@ -185,13 +180,15 @@ const AdoptionFormPage = () => {
           >
             Voltar
           </button>
+          <div className="pet-info">
+            <h3>{pet.nome}</h3>
+            <p><strong>Sexo:</strong> {pet.sexo}</p>
+            <p><strong>Idade:</strong> {pet.idade?.valor ? `${pet.idade.valor} ${pet.idade.unidade}` : 'Idade não informada'}</p>
+            <p><strong>ONG:</strong> {selectedOng?.nome || pet.nomeOng || 'ONG não informada'}</p>
+          </div>
         </div>
 
         <div className="adoption-form-right">
-          <div className="form-header">
-            <h1>Formulário de Solicitação de Adoção</h1>
-          </div>
-
           <div className="form-introduction">
             <p>
                 Olá! Para adotar <strong>{pet.nome}</strong>, preencha este questionário e envie fotos de onde ele irá morar. O questionário é detalhado para garantir o bem-estar do animal e evitar devoluções.
@@ -449,9 +446,7 @@ const AdoptionFormPage = () => {
                   <option value="nao">Não</option>
                 </select>
               </div>
-            </section>
 
-            <section className="form-section">
               <div className="form-group checkbox-group">
                 <label className="declaration-label">
                   <input
@@ -465,13 +460,10 @@ const AdoptionFormPage = () => {
                 </label>
               </div>
 
-              <button type="submit" disabled={loading} className="submit-button">
+              <button type="submit" disabled={loading || !formData.declaracaoVerdadeira} className="submit-button">
                     {loading ? 'Enviando...' : 'Enviar Solicitação'}
               </button>
-      
             </section>
-
-
           </form>
         </div>
       </div>
