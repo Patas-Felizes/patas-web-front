@@ -47,12 +47,11 @@ const PetAdoptionRequestsPage = () => {
   const handleApprove = async (requestId) => {
     if (window.confirm('Tem certeza que deseja aprovar esta solicitação? O animal será marcado como ADOTADO e não ficará mais visível para outros adotantes.')) {
       try {
-        // Passar o petId para que o status do pet seja atualizado
         await updateRequestStatus(
           requestId, 
           'aprovada', 
           responseMessage || 'Solicitação aprovada! Entre em contato conosco para finalizar o processo.',
-          petId // Adicionar petId aqui
+          petId 
         );
         
         setRequests(prev => 
@@ -63,7 +62,6 @@ const PetAdoptionRequestsPage = () => {
           )
         );
         
-        // Atualizar o estado do pet localmente também
         setPet(prevPet => ({ ...prevPet, status: 'Adotado' }));
         
         setResponseMessage('');
@@ -201,7 +199,6 @@ const PetAdoptionRequestsPage = () => {
           </div>
         </div>
 
-        {/* Mostrar aviso se o pet já foi adotado */}
         {pet.status === 'Adotado' && (
           <div className="adopted-warning">
             <p><strong>⚠️ Este animal já foi adotado!</strong> Ele não está mais visível para outros adotantes.</p>
@@ -310,6 +307,10 @@ const PetAdoptionRequestsPage = () => {
                         <div className="response-item">
                           <span className="question">Permitido animais no imóvel?</span>
                           <span className="answer">{request.informacoesLar?.permitidoAnimaisImovel ? 'Sim' : 'Não'}</span>
+                        </div>
+                        <div className="response-item">
+                          <span className="question">Residência tem proteções?</span>
+                          <span className="answer">{request.informacoesLar?.residenciaTemProtecoes ? 'Sim' : 'Não'}</span>
                         </div>
                         <div className="response-item">
                           <span className="question">Outros animais na casa:</span>

@@ -30,6 +30,7 @@ const AdoptionFormPage = () => {
     
     moraEmCasaOuApartamento: '',
     permitidoAnimaisImovel: '',
+    residenciaTemProtecoes: '',
     outrosAnimaisNaCasa: '',
     historiaAnimaisAnteriores: '',
     espacoParaBrigaTerritorial: '',
@@ -128,6 +129,7 @@ const AdoptionFormPage = () => {
         informacoesLar: {
           moraEmCasaOuApartamento: formData.moraEmCasaOuApartamento,
           permitidoAnimaisImovel: formData.permitidoAnimaisImovel === 'sim',
+          residenciaTemProtecoes: formData.residenciaTemProtecoes === 'sim',
           outrosAnimaisNaCasa: formData.outrosAnimaisNaCasa,
           historiaAnimaisAnteriores: formData.historiaAnimaisAnteriores,
           espacoParaBrigaTerritorial: formData.espacoParaBrigaTerritorial,
@@ -376,7 +378,21 @@ const AdoptionFormPage = () => {
               </div>
 
               <div className="form-group">
-                <label>3. Já há outros animais na casa? Se sim, quais e quantos? São castrados e vacinados?</label>
+                <label>3. Sua residência tem proteções (telas, muro, etc) para impedir que o animal tenha acesso à rua? *</label>
+                <select
+                  name="residenciaTemProtecoes"
+                  value={formData.residenciaTemProtecoes}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Selecione</option>
+                  <option value="sim">Sim</option>
+                  <option value="nao">Não</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>4. Já há outros animais na casa? Se sim, quais e quantos? São castrados e vacinados?</label>
                 <textarea
                   name="outrosAnimaisNaCasa"
                   value={formData.outrosAnimaisNaCasa}
@@ -386,7 +402,7 @@ const AdoptionFormPage = () => {
               </div>
 
               <div className="form-group">
-                <label>4. Caso não tenha outros animais atualmente, já teve? Conte a história dele(s):</label>
+                <label>5. Caso não tenha outros animais atualmente, já teve? Conte a história dele(s):</label>
                 <textarea
                   name="historiaAnimaisAnteriores"
                   value={formData.historiaAnimaisAnteriores}
@@ -396,7 +412,7 @@ const AdoptionFormPage = () => {
               </div>
 
               <div className="form-group">
-                <label>5. Se você tem outros animais atualmente, haverá espaço para prevenir uma briga territorial? Terá paciência para fazer a adaptação deles? Como será a adaptação?</label>
+                <label>6. Se você tem outros animais atualmente, haverá espaço para prevenir uma briga territorial? Terá paciência para fazer a adaptação deles? Como será a adaptação?</label>
                 <textarea
                   name="espacoParaBrigaTerritorial"
                   value={formData.espacoParaBrigaTerritorial}
@@ -406,7 +422,7 @@ const AdoptionFormPage = () => {
               </div>
 
               <div className="form-group">
-                <label>6. Está ciente da expectativa de vida de um {pet.especie?.toLowerCase()} e se compromete a cuidar bem dele até seu último dia de vida? *</label>
+                <label>7. Está ciente da expectativa de vida de um {pet.especie?.toLowerCase()} e se compromete a cuidar bem dele até seu último dia de vida? *</label>
                 <select
                   name="cienteExpectativaVida"
                   value={formData.cienteExpectativaVida}
@@ -420,7 +436,7 @@ const AdoptionFormPage = () => {
               </div>
 
               <div className="form-group">
-                <label>7. Toda a família, ou pessoas com quem você divide casa, está de acordo com a adoção? *</label>
+                <label>8. Toda a família, ou pessoas com quem você divide casa, está de acordo com a adoção? *</label>
                 <select
                   name="familiaDeAcordo"
                   value={formData.familiaDeAcordo}
@@ -434,7 +450,7 @@ const AdoptionFormPage = () => {
               </div>
 
               <div className="form-group">
-                <label>8. Concorda em nos enviar fotos e notícias do animal periodicamente? *</label>
+                <label>9. Concorda em nos enviar fotos e notícias do animal periodicamente? *</label>
                 <select
                   name="concordaEnviarFotosNoticias"
                   value={formData.concordaEnviarFotosNoticias}

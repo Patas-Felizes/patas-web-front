@@ -6,7 +6,7 @@ import {
   updateAdoptionRequestStatusWithResponse,
   uploadAdoptionPhotos,
   deleteAdoptionRequest,
-  updatePet // Adicionar essa importação
+  updatePet
 } from '../services/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { useOng } from '../contexts/OngContext';
@@ -73,10 +73,8 @@ export const useAdoptionRequests = () => {
     setLoading(true);
     setError(null);
     try {
-      // Atualizar o status da solicitação de adoção
       await updateAdoptionRequestStatusWithResponse(requestId, status, responseMessage);
       
-      // Se a solicitação foi aprovada, atualizar o status do pet para "Adotado"
       if (status === 'aprovada' && petId) {
         await updatePet(petId, { status: 'Adotado' });
       }
