@@ -4,7 +4,9 @@ import {
   getAdoptionRequestsByAdotante,
   getAdoptionRequestsByOng,
   updateAdoptionRequestStatusWithResponse,
-  uploadAdoptionPhotos
+  uploadAdoptionPhotos,
+  deleteAdoptionRequest,
+  updatePet // Adicionar essa importação
 } from '../services/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { useOng } from '../contexts/OngContext';
@@ -67,11 +69,18 @@ export const useAdoptionRequests = () => {
     }
   };
 
-  const updateRequestStatus = async (requestId, status, responseMessage = '') => {
+  const updateRequestStatus = async (requestId, status, responseMessage = '', petId = null) => {
     setLoading(true);
     setError(null);
     try {
+      // Atualizar o status da solicitação de adoção
       await updateAdoptionRequestStatusWithResponse(requestId, status, responseMessage);
+      
+      // Se a solicitação foi aprovada, atualizar o status do pet para "Adotado"
+      if (status === 'aprovada' && petId) {
+        await updatePet(petId, { status: 'Adotado' });
+      }
+      
       setRequests(prevRequests =>
         prevRequests.map(request =>
           request.id === requestId
@@ -89,21 +98,21 @@ export const useAdoptionRequests = () => {
   };
 
   const deleteRequest = async (requestId) => {
-  setLoading(true);
-  setError(null);
-  try {
-    await deleteAdoptionRequest(requestId);
-    setRequests(prevRequests => 
-      prevRequests.filter(request => request.id !== requestId)
-    );
-  } catch (err) {
-    setError(err.message);
-    console.error('Erro ao excluir solicitação:', err);
-    throw err;
-  } finally {
-    setLoading(false);
-  }
-};
+    setLoading(true);
+    setError(null);
+    try {
+      await deleteAdoptionRequest(requestId);
+      setRequests(prevRequests => 
+        prevRequests.filter(request => request.id !== requestId)
+      );
+    } catch (err) {
+      setError(err.message);
+      console.error('Erro ao excluir solicitação:', err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (userData && (!isProtetor || (isProtetor && selectedOng))) {

@@ -464,3 +464,27 @@
    width: 100%;
  }
 }
+
+.adopted-warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  color: #856404;
+}
+
+.pet-status {
+  font-weight: 600;
+  color: #495057;
+}
+
+.adopted-notice {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  color: #6c757d;
+  text-align: center;
+}

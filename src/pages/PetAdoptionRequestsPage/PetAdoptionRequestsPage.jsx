@@ -45,9 +45,15 @@ const PetAdoptionRequestsPage = () => {
   }, [pet, petId]);
 
   const handleApprove = async (requestId) => {
-    if (window.confirm('Tem certeza que deseja aprovar esta solicitação?')) {
+    if (window.confirm('Tem certeza que deseja aprovar esta solicitação? O animal será marcado como ADOTADO e não ficará mais visível para outros adotantes.')) {
       try {
-        await updateRequestStatus(requestId, 'aprovada', responseMessage || 'Solicitação aprovada! Entre em contato conosco para finalizar o processo.');
+        // Passar o petId para que o status do pet seja atualizado
+        await updateRequestStatus(
+          requestId, 
+          'aprovada', 
+          responseMessage || 'Solicitação aprovada! Entre em contato conosco para finalizar o processo.',
+          petId // Adicionar petId aqui
+        );
         
         setRequests(prev => 
           prev.map(req => 
@@ -57,9 +63,12 @@ const PetAdoptionRequestsPage = () => {
           )
         );
         
+        // Atualizar o estado do pet localmente também
+        setPet(prevPet => ({ ...prevPet, status: 'Adotado' }));
+        
         setResponseMessage('');
         setRespondingTo(null);
-        alert('Solicitação aprovada com sucesso!');
+        alert('Solicitação aprovada com sucesso! O animal foi marcado como adotado.');
       } catch (error) {
         alert(`Erro ao aprovar solicitação: ${error.message}`);
       }
@@ -176,6 +185,7 @@ const PetAdoptionRequestsPage = () => {
             <div className="pet-header-details">
               <h1>Solicitações para {pet.nome}</h1>
               <p>{pet.especie} • {pet.sexo} • {pet.idade?.valor} {pet.idade?.unidade}</p>
+              <p className="pet-status">Status atual: <strong>{pet.status}</strong></p>
               <p className="requests-count-header">
                 {requests.length} {requests.length === 1 ? 'solicitação recebida' : 'solicitações recebidas'}
               </p>
@@ -190,6 +200,13 @@ const PetAdoptionRequestsPage = () => {
             </button>
           </div>
         </div>
+
+        {/* Mostrar aviso se o pet já foi adotado */}
+        {pet.status === 'Adotado' && (
+          <div className="adopted-warning">
+            <p><strong>⚠️ Este animal já foi adotado!</strong> Ele não está mais visível para outros adotantes.</p>
+          </div>
+        )}
 
         {requests.length === 0 ? (
           <div className="no-requests">
@@ -321,7 +338,7 @@ const PetAdoptionRequestsPage = () => {
                       </div>
                     </div>
 
-                    {request.status === 'em_espera' && (
+                    {request.status === 'em_espera' && pet.status !== 'Adotado' && (
                       <div className="response-section">
                         <h4>Responder Solicitação</h4>
                         <textarea
@@ -347,6 +364,12 @@ const PetAdoptionRequestsPage = () => {
                             Rejeitar Solicitação
                           </button>
                         </div>
+                      </div>
+                    )}
+
+                    {pet.status === 'Adotado' && request.status === 'em_espera' && (
+                      <div className="adopted-notice">
+                        <p><strong>Este animal já foi adotado.</strong> Esta solicitação não pode mais ser processada.</p>
                       </div>
                     )}
 
