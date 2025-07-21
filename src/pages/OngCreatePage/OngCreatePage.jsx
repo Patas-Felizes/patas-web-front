@@ -16,7 +16,7 @@ const OngCreatePage = () => {
     nome: '',
     contato: '',
     endereco: {
-        rua: '',
+      rua: '',
       numero: '',
       estado: '',
       cidade: ''
@@ -74,6 +74,12 @@ const OngCreatePage = () => {
     }
     if (!formData.contato.trim()) {
       return 'Contato é obrigatório';
+    }
+    if (!formData.endereco.cidade.trim()) {
+      return 'Cidade é obrigatória';
+    }
+    if (!formData.endereco.estado.trim()) {
+      return 'Estado é obrigatório';
     }
     return null;
   };
@@ -200,25 +206,27 @@ const OngCreatePage = () => {
             </div>
 
             <div className="info-field">
-              <label className="info-label">Estado</label>
+              <label className="info-label">Estado *</label>
               <input
                 type="text"
                 name="endereco.estado"
                 value={formData.endereco.estado}
                 onChange={handleChange}
                 className="info-input"
+                required
                 placeholder="Estado"
               />
             </div>
 
             <div className="info-field full-width">
-              <label className="info-label">Cidade</label>
+              <label className="info-label">Cidade *</label>
               <input
                 type="text"
                 name="endereco.cidade"
                 value={formData.endereco.cidade}
                 onChange={handleChange}
                 className="info-input"
+                required
                 placeholder="Cidade"
               />
             </div>
