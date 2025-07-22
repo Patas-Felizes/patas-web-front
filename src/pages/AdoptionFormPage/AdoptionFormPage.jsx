@@ -107,7 +107,7 @@ const AdoptionFormPage = () => {
         idAdotante: userData.uid,
         idOng: selectedOng?.id || pet.ongId,
         idAnimal: pet.id,
-        nomeOng: selectedOng?.nome || 'ONG',
+        nomeOng: selectedOng?.nome || 'Abrigo',
         nomeAnimal: pet.nome,
         
         informacoesPessoais: {
@@ -186,7 +186,7 @@ const AdoptionFormPage = () => {
             <h3>{pet.nome}</h3>
             <p><strong>Sexo:</strong> {pet.sexo}</p>
             <p><strong>Idade:</strong> {pet.idade?.valor ? `${pet.idade.valor} ${pet.idade.unidade}` : 'Idade não informada'}</p>
-            <p><strong>ONG:</strong> {selectedOng?.nome || pet.nomeOng || 'ONG não informada'}</p>
+            <p><strong>ONG:</strong> {selectedOng?.nome || pet.nomeOng || 'Abrigo não informado'}</p>
           </div>
         </div>
 

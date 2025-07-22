@@ -18,7 +18,7 @@ const OngDetailsPage = () => {
   }, [ongId, ongs]);
 
   const handleRemove = async () => {
-    if (window.confirm(`Tem certeza que deseja remover a ONG ${ong.nome}?`)) {
+    if (window.confirm(`Tem certeza que deseja remover o Abrigo ${ong.nome}?`)) {
       try {
         await removeOng(ongId);
         alert('ONG removida com sucesso!');
@@ -41,7 +41,7 @@ const OngDetailsPage = () => {
     return (
       <div className="ong-detail-page">
         <Navbar />
-        <div className="detail-loading">Carregando informações da ONG...</div>
+        <div className="detail-loading">Carregando informações do Abrigo...</div>
       </div>
     );
   }
@@ -50,7 +50,7 @@ const OngDetailsPage = () => {
     return (
       <div className="ong-detail-page">
         <Navbar />
-        <div className="detail-loading">ONG não encontrada.</div>
+        <div className="detail-loading">Abrigo não encontrado.</div>
       </div>
     );
   }
@@ -62,14 +62,14 @@ const OngDetailsPage = () => {
         <div className="ong-detail-left">
           <div className="ong-image-card">
             <div className="ong-placeholder-content">
-              <span className="ong-placeholder-text">ONG/Abrigo</span>
+              <span className="ong-placeholder-text">Abrigo</span>
             </div>
           </div>
           <button onClick={handleBack} className="action-button back-button">Voltar</button>
           <button onClick={handleRemove} disabled={actionLoading} className="action-button remove-button">
-            {actionLoading ? 'Removendo...' : 'Remover ONG'}
+            {actionLoading ? 'Removendo...' : 'Remover Abrigo'}
           </button>
-          <button onClick={handleEdit} className="action-button edit-button">Editar ONG</button>
+          <button onClick={handleEdit} className="action-button edit-button">Editar Abrigo</button>
         </div>
         <div className="ong-detail-right">
           <div className="info-section">
@@ -78,15 +78,11 @@ const OngDetailsPage = () => {
               <div className="info-value">{ong.nome}</div>
             </div>
             
-            <div className="info-field full-width">
-              <label className="info-label">Contato</label>
-              <div className="info-value">{ong.contato || 'Não informado'}</div>
-            </div>
 
             {ong.endereco && (
               <>
                 <div className="info-field">
-                  <label className="info-label">Rua/Avenida/Travessa</label>
+                  <label className="info-label">Logradouro</label>
                   <div className="info-value">{ong.endereco.rua || 'Não informado'}</div>
                 </div>
 

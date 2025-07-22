@@ -54,7 +54,7 @@ const OngSelectionPage = () => {
         <div className="ong-selection-page">
           <main className="main-content">
             <div className="error-container">
-              <h2>Erro ao carregar ONGs</h2>
+              <h2>Erro ao carregar o Abrigo</h2>
               <p>{error}</p>
               <button onClick={clearError} className="retry-button">
                 Tentar novamente
@@ -88,10 +88,10 @@ const OngSelectionPage = () => {
             </div>
           </div>
 
-          <h3>Minhas ONGs/Abrigos ({ongsFiltradas.length})</h3>
+          <h3>Meus Abrigos ({ongsFiltradas.length})</h3>
 
           {loading ? (
-            <div className="loading">Carregando ONGs...</div>
+            <div className="loading">Carregando Abrigos...</div>
           ) : (
             <div className="ongs-grid">
               {ongsFiltradas.map(ong => (
@@ -132,17 +132,17 @@ const OngSelectionPage = () => {
           {!loading && ongsFiltradas.length === 0 && (!ongs || ongs.length === 0) && (
             <div className="no-ongs">
               <FaBuilding className="no-ongs-icon" />
-              <h3>Nenhuma ONG/Abrigo cadastrada</h3>
-              <p>Crie sua primeira ONG/Abrigo para começar a gerenciar seus animais.</p>
+              <h3>Nenhum cadastrado</h3>
+              <p>Crie seu primeiro Abrigo para começar a gerenciar seus animais.</p>
               <button className="create-first-ong-btn" onClick={handleCreateOng}>
-                <FaPlus /> Criar primeira ONG/Abrigo
+                <FaPlus /> Criar primeiro Abrigo
               </button>
             </div>
           )}
 
           {!loading && ongsFiltradas.length === 0 && ongs && ongs.length > 0 && (
             <div className="no-ongs">
-              <p>Nenhuma ONG/Abrigo encontrada com o termo pesquisado.</p>
+              <p>Nenhum Abrigo encontrado com o termo pesquisado.</p>
             </div>
           )}
         </main>

@@ -102,7 +102,7 @@ const OngCreatePage = () => {
 
   const validateForm = () => {
     if (!formData.nome.trim()) {
-      return 'Nome da ONG é obrigatório';
+      return 'Nome do Abrigo é obrigatório';
     }
     if (!formData.contato.trim()) {
       return 'Contato é obrigatório';
@@ -154,7 +154,7 @@ const OngCreatePage = () => {
       <div className="ong-create-page">
         <Navbar />
         <div className="loading-message">
-          {fetchLoading ? 'Carregando dados da ONG...' : 'Carregando estados...'}
+          {fetchLoading ? 'Carregando dados do Abrigo...' : 'Carregando estados...'}
         </div>
       </div>
     );
@@ -167,7 +167,7 @@ const OngCreatePage = () => {
         <div className="ong-create-left">
           <div className="ong-image-placeholder">
             <div className="ong-placeholder-content">
-              <span className="ong-placeholder-text">ONG/Abrigo</span>
+              <span className="ong-placeholder-text">Abrigo</span>
             </div>
           </div>
           <button type="button" className="action-button cancel-button" onClick={handleCancel} disabled={loading}>
@@ -179,7 +179,7 @@ const OngCreatePage = () => {
         </div>
         <div className="ong-create-right">
           <h2 style={{ textAlign: 'left' }}>
-            {isEditMode ? 'Editar ONG/Abrigo' : 'Cadastrar Nova ONG/Abrigo'}
+            {isEditMode ? 'Editar Abrigo' : 'Cadastrar Novo Abrigo'}
           </h2>
           
           {error && (
@@ -190,7 +190,7 @@ const OngCreatePage = () => {
 
           <div className="info-section">
             <div className="info-field full-width">
-              <label className="info-label">Nome da ONG/Abrigo *</label>
+              <label className="info-label">Nome do Abrigo *</label>
               <input
                 type="text"
                 name="nome"
@@ -198,32 +198,19 @@ const OngCreatePage = () => {
                 onChange={handleChange}
                 className="info-input"
                 required
-                placeholder="Digite o nome da ONG ou abrigo"
-              />
-            </div>
-
-            <div className="info-field full-width">
-              <label className="info-label">Contato *</label>
-              <input
-                type="text"
-                name="contato"
-                value={formData.contato}
-                onChange={handleChange}
-                className="info-input"
-                required
-                placeholder="Telefone, email ou responsável"
+                placeholder="Digite o nome do abrigo"
               />
             </div>
 
             <div className="info-field">
-              <label className="info-label">Rua/Avenida/Travessa</label>
+              <label className="info-label">Logradouro</label>
               <input
                 type="text"
                 name="endereco.rua"
                 value={formData.endereco.rua}
                 onChange={handleChange}
                 className="info-input"
-                placeholder="Rua/Avenida/Travessa"
+                placeholder="Logradouro"
               />
             </div>
 
@@ -285,18 +272,6 @@ const OngCreatePage = () => {
                 ))}
               </select>
             </div>
-          </div>
-
-          <div className="ong-description">
-            <label className="description-label">Participantes</label>
-            <textarea
-              name="participantes"
-              value={formData.participantes}
-              onChange={handleChange}
-              className="description-textarea"
-              placeholder="Descreva os participantes ou membros da ONG"
-              rows="3"
-            />
           </div>
         </div>
       </form>
