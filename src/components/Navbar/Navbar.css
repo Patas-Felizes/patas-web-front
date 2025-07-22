@@ -2,67 +2,91 @@
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   margin-top: 0;
-  padding: 10px 40px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #84A1DB;
-  border-bottom: 1px solid #7391d3;
+  justify-content: center;
+  background: linear-gradient(135deg, #84A1DB 0%, #667eaf 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   box-sizing: border-box;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000; 
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(132, 161, 219, 0.3);
+}
+
+.navbar-content {
+  width: 100%;
+  max-width: 1200px;
+  padding: 12px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .navbar-logo {
   display: flex;
   align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.02);
 }
 
 .logo-image {
-  height: 50px;
+  height: 45px;
   width: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-.ong-icon {
-  font-size: 0.9rem;
-}
-
-.ong-name {
-  max-width: 200px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.logo-text {
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-links {
   list-style: none;
   display: flex;
-  gap: 4rem;
+  gap: 2rem;
   margin: 0;
   padding: 0;
   margin-left: auto;
-  margin-right: 4.5rem;
+  margin-right: 2rem;
 }
 
 .navbar-links a {
   text-decoration: none;
-  color: #ffffff;
-  font-weight: 800;
-  font-size: 1rem;
-  padding-bottom: 5px;
-  border-bottom: 2px solid transparent;
-  transition: color 0.3s, border-color 0.3s;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
 }
 
 .navbar-links a:hover {
-  color: #f0f4ff;
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
 }
 
 .navbar-links a.active {
-  color: #ffffff;
-  border-bottom-color: #ffffff;
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-icon {
+  font-size: 0.85rem;
 }
 
 .navbar-profile {
@@ -72,17 +96,19 @@
 }
 
 .profile-pic-placeholder {
-  width: 40px;
-  height: 40px;
-  background-color: #ffffff;
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #84A1DB;
-  font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: 700;
   font-size: 0.9rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
 .user-section {
@@ -92,15 +118,21 @@
 .user-menu-trigger {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
 }
 
 .user-menu-trigger:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.user-menu-trigger:hover .profile-pic-placeholder {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 .user-info {
@@ -108,155 +140,232 @@
   flex-direction: column;
   align-items: flex-start;
   color: white;
+  max-width: 200px;
 }
 
 .user-name {
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.9rem;
   line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .user-type {
-  font-size: 0.75rem;
-  opacity: 0.8;
-  font-weight: 500;
+  font-size: 0.7rem;
+  opacity: 0.9;
+  font-weight: 400;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .dropdown-icon {
-  color: white;
-  font-size: 0.8rem;
-  transition: transform 0.3s ease;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.7rem;
+  transition: all 0.3s ease;
 }
 
 .dropdown-icon.rotated {
   transform: rotate(180deg);
+  color: white;
 }
 
 .user-dropdown {
   position: absolute;
-  top: calc(100% + 1rem);
+  top: calc(100% + 12px);
   right: 0;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-  min-width: 250px;
-  padding: 1rem 0;
-  border: 1px solid #e1e5e9;
-  animation: slideDown 0.2s ease-out;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  min-width: 280px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  animation: slideDown 0.3s ease-out;
   z-index: 1001;
+  overflow: hidden;
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-8px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
 .user-dropdown-header {
-  padding: 0 1rem;
-  margin-bottom: 0.5rem;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-avatar-large {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #84A1DB 0%, #667eaf 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(132, 161, 219, 0.3);
+}
+
+.user-details {
+  flex: 1;
+}
+
+.user-name-large {
+  color: #333;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
 }
 
 .user-email {
-  color: #333;
-  font-size: 0.9rem;
-  margin: 0 0 0.5rem 0;
-  font-weight: 500;
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0 0 8px 0;
+  font-weight: 400;
   word-break: break-word;
 }
 
 .user-type-badge {
   background: linear-gradient(135deg, #84A1DB 0%, #667eaf 100%);
   color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e9ecef, transparent);
+  margin: 8px 20px;
 }
 
 .ong-section {
-  padding: 0 1rem;
+  padding: 16px 20px;
 }
 
 .current-ong {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 12px;
 }
 
 .ong-info {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: #333;
-  font-size: 0.85rem;
+  gap: 12px;
+}
+
+.ong-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #84A1DB 0%, #667eaf 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ong-icon-small {
-  color: #84A1DB;
-  font-size: 0.8rem;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.ong-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ong-label {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .ong-name-small {
   font-weight: 600;
-  max-width: 160px;
+  color: #333;
+  font-size: 0.9rem;
+  max-width: 180px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.ong-location {
+  font-size: 0.75rem;
+  color: #999;
+  font-weight: 400;
+  font-style: italic;
+}
+
 .change-ong-button,
 .select-ong-button {
-  background: none;
-  border: 1px solid #84A1DB;
-  color: #84A1DB;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  background: linear-gradient(135deg, #84A1DB 0%, #667eaf 100%);
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 600;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(132, 161, 219, 0.3);
 }
 
 .change-ong-button:hover,
 .select-ong-button:hover {
-  background: #84A1DB;
-  color: white;
-}
-
-.user-dropdown hr {
-  border: none;
-  border-top: 1px solid #e1e5e9;
-  margin: 0.5rem 0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(132, 161, 219, 0.4);
 }
 
 .logout-button {
   width: 100%;
   background: none;
   border: none;
-  padding: 0.75rem 1rem;
+  padding: 16px 20px;
   text-align: left;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 12px;
   color: #666;
   font-size: 0.9rem;
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 
 .logout-button:hover:not(:disabled) {
-  background-color: #f8f9fa;
-  color: #c53030;
+  background: linear-gradient(135deg, #fee, #fef5e7);
+  color: #dc3545;
 }
 
 .logout-button:disabled {
@@ -274,49 +383,73 @@
 }
 
 @media (max-width: 768px) {
-  .navbar {
+  .navbar-content {
     padding: 10px 20px;
-    flex-direction: row; 
-    gap: 1rem;
   }
-
-  .navbar-links {
-    gap: 1.5rem;
-    margin-right: 2rem;
+  
+  .logo-text {
+    display: none;
   }
-
-  .navbar-links a {
-    font-size: 0.9rem;
-  }
-
-  .user-info {
-    display: none; 
-  }
-
-  .user-dropdown {
-    right: -1rem;
-    min-width: 220px;
-  }
-
-  .profile-pic-placeholder {
-    width: 35px;
-    height: 35px;
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
+  
   .navbar-links {
     gap: 1rem;
     margin-right: 1rem;
   }
   
+  .navbar-links a span {
+    display: none;
+  }
+  
   .navbar-links a {
+    padding: 8px 12px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+  }
+  
+  .user-info {
+    display: none;
+  }
+  
+  .user-dropdown {
+    right: -8px;
+    min-width: 260px;
+  }
+  
+  .profile-pic-placeholder {
+    width: 36px;
+    height: 36px;
     font-size: 0.8rem;
   }
+}
 
+@media (max-width: 480px) {
+  .navbar-content {
+    padding: 8px 15px;
+  }
+  
+  .navbar-links {
+    gap: 0.5rem;
+    margin-right: 0.5rem;
+  }
+  
   .user-dropdown {
-    right: -2rem;
-    min-width: 200px;
+    right: -15px;
+    min-width: 240px;
+  }
+  
+  .navbar-links a {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .nav-icon {
+    font-size: 0.8rem;
+  }
+  
+  .user-type-badge {
+    font-size: 0.65rem;
+    padding: 4px 10px;
   }
 }
