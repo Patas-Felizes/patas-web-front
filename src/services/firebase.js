@@ -18,6 +18,8 @@ import {
   deleteObject,
 } from 'firebase/storage';
 import { db, storage } from '../config/firebase';
+import { getOngById } from './ongs';
+
 
 const PETS_COLLECTION = 'pets';
 const PROCEDURES_COLLECTION = 'procedimentos'; 
@@ -51,6 +53,11 @@ export const getAllPets = async (ongId = null) => {
       });
     });
 
+    if (!ongId) {
+      const enrichedPets = await enrichPetsWithOngData(pets);
+      return enrichedPets.filter(pet => !pet.ongNotFound);
+    }
+
     return pets;
   } catch (error) {
     console.error('Erro ao buscar pets:', error);
@@ -64,10 +71,21 @@ export const getPetById = async (petId) => {
     const petSnap = await getDoc(petRef);
 
     if (petSnap.exists()) {
-      return {
+      const petData = {
         id: petSnap.id,
         ...petSnap.data(),
       };
+
+      if (petData.ongId) {
+        try {
+          const ongData = await getOngById(petData.ongId);
+          petData.ong = ongData;
+        } catch (error) {
+          console.error(`Erro ao carregar ONG ${petData.ongId}:`, error);
+        }
+      }
+
+      return petData;
     } else {
       throw new Error('Pet não encontrado');
     }
@@ -397,5 +415,69 @@ export const deleteAdoptionRequest = async (requestId) => {
   } catch (error) {
     console.error('Erro ao deletar solicitação:', error);
     throw new Error('Falha ao excluir solicitação');
+  }
+};
+
+const enrichPetsWithOngData = async (pets) => {
+  const enrichedPets = await Promise.all(
+    pets.map(async (pet) => {
+      if (pet.ongId) {
+        try {
+          const ongData = await getOngById(pet.ongId);
+          return {
+            ...pet,
+            ong: ongData
+          };
+        } catch (error) {
+          if (!enrichPetsWithOngData.loggedErrors) {
+            enrichPetsWithOngData.loggedErrors = new Set();
+          }
+          
+          if (!enrichPetsWithOngData.loggedErrors.has(pet.ongId)) {
+            console.warn(`Pet "${pet.nome}" (ID: ${pet.id}) referencia ONG inexistente (${pet.ongId}). Considere limpar os dados.`);
+            enrichPetsWithOngData.loggedErrors.add(pet.ongId);
+          }
+          
+          return {
+            ...pet,
+            ong: null,
+            ongNotFound: true
+          };
+        }
+      }
+      return pet;
+    })
+  );
+  return enrichedPets;
+};
+
+export const cleanupOrphanPets = async () => {
+  try {
+    const petsRef = collection(db, PETS_COLLECTION);
+    const q = query(petsRef);
+    const querySnapshot = await getDocs(q);
+    
+    const orphanPets = [];
+    
+    for (const doc of querySnapshot.docs) {
+      const petData = doc.data();
+      if (petData.ongId) {
+        try {
+          await getOngById(petData.ongId);
+        } catch (error) {
+          orphanPets.push({
+            id: doc.id,
+            nome: petData.nome,
+            ongId: petData.ongId
+          });
+        }
+      }
+    }
+    
+    console.log('Pets órfãos encontrados:', orphanPets);
+    return orphanPets;
+  } catch (error) {
+    console.error('Erro ao verificar pets órfãos:', error);
+    throw error;
   }
 };

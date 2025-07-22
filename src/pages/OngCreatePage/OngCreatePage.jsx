@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 import { useOngs } from '../../hooks/useOngs';
+import { useIBGEData } from '../../hooks/useIBGEData';
 import './OngCreatePage.css';
 
 const OngCreatePage = () => {
@@ -9,6 +10,8 @@ const OngCreatePage = () => {
   const isEditMode = Boolean(ongId);
   const navigate = useNavigate();
   const { ongs, createNewOng, editOng, loading } = useOngs();
+  const { states, loadCitiesByState, loadingStates, loadingCities } = useIBGEData();
+  
   const [existingOng, setExistingOng] = useState(null);
   const [fetchLoading, setFetchLoading] = useState(isEditMode);
   
@@ -24,6 +27,35 @@ const OngCreatePage = () => {
     participantes: ''
   });
   const [error, setError] = useState('');
+  const [availableCities, setAvailableCities] = useState([]);
+
+  useEffect(() => {
+    const loadCities = async () => {
+      if (formData.endereco.estado) {
+        try {
+          const cities = await loadCitiesByState(formData.endereco.estado);
+          setAvailableCities(cities);
+          
+          if (formData.endereco.cidade && !cities.includes(formData.endereco.cidade)) {
+            setFormData(prev => ({
+              ...prev,
+              endereco: {
+                ...prev.endereco,
+                cidade: ''
+              }
+            }));
+          }
+        } catch (error) {
+          console.error('Erro ao carregar cidades:', error);
+          setAvailableCities([]);
+        }
+      } else {
+        setAvailableCities([]);
+      }
+    };
+
+    loadCities();
+  }, [formData.endereco.estado, loadCitiesByState]);
 
   useEffect(() => {
     if (isEditMode && ongs.length > 0) {
@@ -117,11 +149,13 @@ const OngCreatePage = () => {
     }
   };
 
-  if (fetchLoading) {
+  if (fetchLoading || loadingStates) {
     return (
       <div className="ong-create-page">
         <Navbar />
-        <div className="loading-message">Carregando dados da ONG...</div>
+        <div className="loading-message">
+          {fetchLoading ? 'Carregando dados da ONG...' : 'Carregando estados...'}
+        </div>
       </div>
     );
   }
@@ -207,28 +241,49 @@ const OngCreatePage = () => {
 
             <div className="info-field">
               <label className="info-label">Estado *</label>
-              <input
-                type="text"
+              <select
                 name="endereco.estado"
                 value={formData.endereco.estado}
                 onChange={handleChange}
-                className="info-input"
+                className="info-select"
                 required
-                placeholder="Estado"
-              />
+                disabled={loadingStates}
+              >
+                <option value="">
+                  {loadingStates ? 'Carregando estados...' : 'Selecione o estado'}
+                </option>
+                {states.map(({ code, name }) => (
+                  <option key={code} value={code}>
+                    {name}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            <div className="info-field full-width">
+            <div className="info-field">
               <label className="info-label">Cidade *</label>
-              <input
-                type="text"
+              <select
                 name="endereco.cidade"
                 value={formData.endereco.cidade}
                 onChange={handleChange}
-                className="info-input"
+                className="info-select"
                 required
-                placeholder="Cidade"
-              />
+                disabled={!formData.endereco.estado || loadingCities}
+              >
+                <option value="">
+                  {!formData.endereco.estado 
+                    ? 'Primeiro selecione um estado' 
+                    : loadingCities 
+                    ? 'Carregando cidades...' 
+                    : 'Selecione a cidade'
+                  }
+                </option>
+                {availableCities.map(city => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 

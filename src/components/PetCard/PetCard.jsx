@@ -24,42 +24,46 @@ const PetCard = ({
   };
 
   const cardContent = (
-    <div className="pet-card">
-      {imageError ? (
-        <div className="pet-card-image-placeholder">
-          <div>
-            <small>Foto não disponível</small>
-          </div>
+  <div className="pet-card">
+    {!pet.foto || imageError ? (
+      <div className="pet-card-image-placeholder">
+        <div>
+          <small>Foto não disponível</small>
         </div>
-      ) : (
-        <img 
-          src={pet.foto} 
-          alt={pet.nome} 
-          className="pet-card-image"
-          onError={handleImageError}
-        />
+      </div>
+    ) : (
+      <img 
+        src={pet.foto} 
+        alt={pet.nome} 
+        className="pet-card-image"
+        onError={handleImageError}
+      />
+    )}
+    
+    <div className="pet-card-info">
+      <h3>{pet.nome}</h3>
+      <p><strong>Idade:</strong> {formatarIdade(pet.idade)}</p>
+      <p><strong>Sexo:</strong> {pet.sexo}</p>
+      <p><strong>Espécie:</strong> {pet.especie}</p>
+      
+      {isAdotante && pet.ong?.endereco?.cidade && pet.ong?.endereco?.estado && (
+        <p><strong>Local:</strong> {pet.ong.endereco.cidade}, {pet.ong.endereco.estado}</p>
       )}
       
-      <div className="pet-card-info">
-        <h3>{pet.nome}</h3>
-        <p><strong>Idade:</strong> {formatarIdade(pet.idade)}</p>
-        <p><strong>Sexo:</strong> {pet.sexo}</p>
-        <p><strong>Espécie:</strong> {pet.especie}</p>
-        
-        {showStatus && statusText && (
-          <div className={`pet-card-status ${statusClass}`}>
-            {statusText}
-          </div>
-        )}
-        
-        {extraInfo && (
-          <div className="pet-card-extra-info">
-            {extraInfo}
-          </div>
-        )}
-      </div>
+      {showStatus && statusText && (
+        <div className={`pet-card-status ${statusClass}`}>
+          {statusText}
+        </div>
+      )}
+      
+      {extraInfo && (
+        <div className="pet-card-extra-info">
+          {extraInfo}
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
 
   if (onClick) {
     return (
