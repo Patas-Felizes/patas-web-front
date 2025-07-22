@@ -46,10 +46,6 @@ const PetCard = ({
       <p><strong>Sexo:</strong> {pet.sexo}</p>
       <p><strong>Espécie:</strong> {pet.especie}</p>
       
-      {isAdotante && pet.ong?.endereco?.cidade && pet.ong?.endereco?.estado && (
-        <p><strong>Local:</strong> {pet.ong.endereco.cidade}, {pet.ong.endereco.estado}</p>
-      )}
-      
       {showStatus && statusText && (
         <div className={`pet-card-status ${statusClass}`}>
           {statusText}
