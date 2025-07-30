@@ -39,14 +39,16 @@ const MyAdoptionRequestsPage = () => {
               };
             } catch (error) {
               console.error('Erro ao buscar pet:', error);
-              return request;
+              console.error(`Erro ao buscar pet com ID ${request.idAnimal}:`, error.message);
+              return { ...request, pet: null };
             }
           })
         );
         setRequestsWithPetData(requestsWithPets);
       } catch (error) {
         console.error('Erro ao buscar dados dos pets:', error);
-        setRequestsWithPetData(requests);
+        setRequestsWithPetData(requests.map(req => ({ ...req, pet: null }))); 
+        
       }
       setLoadingPetData(false);
     };
@@ -152,15 +154,24 @@ const MyAdoptionRequestsPage = () => {
         ) : (
           <div className="requests-grid">
             {requestsWithPetData.map((request) => (
-              <PetCard
-                key={request.id}
-                pet={request.pet}
-                showStatus={true}
-                statusText={getStatusText(request.status)}
-                statusClass={getStatusClass(request.status)}
-                extraInfo={`Solicitado em: ${formatDate(request.dataEnvio)}`}
-                onClick={() => handleCardClick(request)}
-              />
+              request.pet ? ( 
+                <PetCard
+                  key={request.id}
+                  pet={request.pet}
+                  showStatus={true}
+                  statusText={getStatusText(request.status)}
+                  statusClass={getStatusClass(request.status)}
+                  extraInfo={`Solicitado em: ${formatDate(request.dataEnvio)}`}
+                  onClick={() => handleCardClick(request)}
+                />
+              ) : (
+                <div key={request.id} className="pet-card-unavailable">
+                  <h3>Pet Indisponível</h3>
+                  <p>Não foi possível carregar os dados deste pet.</p>
+                  <p>Status da Solicitação: <span className={getStatusClass(request.status)}>{getStatusText(request.status)}</span></p>
+                  <p>Solicitado em: {formatDate(request.dataEnvio)}</p>
+                </div>
+              )
             ))}
           </div>
         )}

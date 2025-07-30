@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useOng } from '../../contexts/OngContext';
 import { useAdoptionRequests } from '../../hooks/useAdoptionRequests';
 import { usePet } from '../../hooks/usePets';
+import { useIBGEData } from '../../hooks/useIBGEData';
 import './AdoptionFormPage.css';
 
 const AdoptionFormPage = () => {
@@ -14,6 +15,7 @@ const AdoptionFormPage = () => {
   const { selectedOng } = useOng();
   const { createRequest, loading } = useAdoptionRequests();
   const { pet, loading: petLoading } = usePet(petId);
+  const { states, loadCitiesByState, loadingStates, loadingCities } = useIBGEData();
 
   const [formData, setFormData] = useState({
     nomeCompleto: userData?.nome || '',
@@ -43,6 +45,7 @@ const AdoptionFormPage = () => {
 
   const [photoFiles, setPhotoFiles] = useState([]);
   const [photoError, setPhotoError] = useState('');
+  const [availableCities, setAvailableCities] = useState([]);
 
   useEffect(() => {
     if (userData?.tipoUsuario !== 'adotante') {
@@ -60,6 +63,30 @@ const AdoptionFormPage = () => {
       document.getElementById('root').classList.remove('no-scroll');
     };
   }, []);
+
+  useEffect(() => {
+    const loadCities = async () => {
+      if (formData.estado) {
+        try {
+          const cities = await loadCitiesByState(formData.estado);
+          setAvailableCities(cities);
+          
+          if (formData.cidade && !cities.includes(formData.cidade)) {
+            setFormData(prev => ({
+              ...prev,
+              cidade: ''
+            }));
+          }
+        } catch (error) {
+          console.error('Erro ao carregar cidades:', error);
+          setAvailableCities([]);
+        }
+      } else {
+        setAvailableCities([]);
+      }
+    };
+    loadCities();
+  }, [formData.estado, loadCitiesByState]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -149,11 +176,13 @@ const AdoptionFormPage = () => {
     }
   };
 
-  if (petLoading) {
+  if (petLoading || loadingStates) {
     return (
       <div className="adoption-form-page">
         <Navbar />
-        <div className="form-loading">Carregando informações do pet...</div>
+        <div className="form-loading">
+          {petLoading ? 'Carregando informações do pet...' : 'Carregando estados...'}
+        </div>
       </div>
     );
   }
@@ -211,7 +240,6 @@ const AdoptionFormPage = () => {
                   required
                 />
               </div>
-
               <div className="form-row">
                 <div className="form-group">
                   <label>E-mail *</label>
@@ -223,7 +251,6 @@ const AdoptionFormPage = () => {
                     required
                   />
                 </div>
-
                 <div className="form-group">
                   <label>Data de Nascimento *</label>
                   <input
@@ -235,7 +262,6 @@ const AdoptionFormPage = () => {
                   />
                 </div>
               </div>
-
               <div className="form-group">
                 <label>Telefone *</label>
                 <input
@@ -263,7 +289,6 @@ const AdoptionFormPage = () => {
                     required
                   />
                 </div>
-
                 <div className="form-group">
                   <label>Número *</label>
                   <input
@@ -275,7 +300,6 @@ const AdoptionFormPage = () => {
                   />
                 </div>
               </div>
-
               <div className="form-row">
                 <div className="form-group">
                   <label>CEP *</label>
@@ -288,7 +312,6 @@ const AdoptionFormPage = () => {
                     required
                   />
                 </div>
-
                 <div className="form-group">
                   <label>Bairro *</label>
                   <input
@@ -300,29 +323,50 @@ const AdoptionFormPage = () => {
                   />
                 </div>
               </div>
-
               <div className="form-row">
                 <div className="form-group">
                   <label>Estado *</label>
-                  <input
-                    type="text"
+                  <select
                     name="estado"
                     value={formData.estado}
                     onChange={handleInputChange}
-                    placeholder="Ex: SP"
                     required
-                  />
+                    disabled={loadingStates}
+                  >
+                    <option value="">
+                      {loadingStates ? 'Carregando estados...' : 'Selecione o estado'}
+                    </option>
+                    {states.map(({ code, name }) => (
+                      <option key={code} value={code}>
+                        {name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-
+                
                 <div className="form-group">
                   <label>Cidade *</label>
-                  <input
-                    type="text"
+                  <select
                     name="cidade"
                     value={formData.cidade}
                     onChange={handleInputChange}
                     required
-                  />
+                    disabled={!formData.estado || loadingCities}
+                  >
+                    <option value="">
+                      {!formData.estado 
+                        ? 'Primeiro selecione um estado' 
+                        : loadingCities 
+                        ? 'Carregando cidades...' 
+                        : 'Selecione a cidade'
+                      }
+                    </option>
+                    {availableCities.map(city => (
+                      <option key={city} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </section>
